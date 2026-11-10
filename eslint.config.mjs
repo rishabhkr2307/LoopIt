@@ -12,6 +12,9 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    //Ignore eslint for shadcn components
+    "src/hooks/use-mobile.ts",
+    "src/components/ui/**"
   ]),
 ]);
 
