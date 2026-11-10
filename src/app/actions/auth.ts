@@ -1,43 +1,35 @@
-'use server';
+'use server'
 
-import { auth } from '@/lib/auth/server';
-import { redirect } from 'next/navigation';
+import { auth } from '@/lib/auth/server'
+import { redirect } from 'next/navigation'
 
-export async function signUpWithEmail(
-  _prevState: { error: string } | null,
-  formData: FormData
-) {
-  const email = formData.get('email') as string;
+export async function signUpWithEmail(_prevState: { error: string } | null, formData: FormData) {
+  const email = formData.get('email') as string
 
   if (!email) {
-    return { error: "Email address must be provided." }
+    return { error: 'Email address must be provided.' }
   }
 
   const { error } = await auth.signUp.email({
     email,
     name: formData.get('name') as string,
     password: formData.get('password') as string,
-  });
+  })
 
   if (error) {
-    return { error: error.message || 'Failed to create account' };
+    return { error: error.message || 'Failed to create account' }
   }
 
-  redirect('/');
+  redirect('/')
 }
 
-
-export async function signInWithEmail(
-  _prevState: { error: string } | null,
-  formData: FormData
-) {
+export async function signInWithEmail(_prevState: { error: string } | null, formData: FormData) {
   const { error } = await auth.signIn.email({
     email: formData.get('email') as string,
     password: formData.get('password') as string,
-  });
+  })
   if (error) {
-    return { error: error.message || 'Failed to sign in. Try again' };
+    return { error: error.message || 'Failed to sign in. Try again' }
   }
-  redirect('/');
+  redirect('/')
 }
-

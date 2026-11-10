@@ -1,7 +1,7 @@
-"use client"
+'use client'
 
-import { LoginForm } from "@/components/login-form"
-import { InfinityIcon } from "@phosphor-icons/react"
+import { LoginForm } from '@/components/login-form'
+import { InfinityIcon } from '@phosphor-icons/react'
 
 export default function LoginPage() {
   return (

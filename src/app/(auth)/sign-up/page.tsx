@@ -1,7 +1,7 @@
-"use client"
+'use client'
 
-import { SignupForm } from "@/components/signup-form"
-import { InfinityIcon } from "@phosphor-icons/react"
+import { SignupForm } from '@/components/signup-form'
+import { InfinityIcon } from '@phosphor-icons/react'
 
 export default function SignupPage() {
   return (
