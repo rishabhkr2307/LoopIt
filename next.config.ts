@@ -12,6 +12,7 @@ const nextConfig: NextConfig = {
       },
     },
   },
+  allowedDevOrigins: [process.env.NEXT_PUBLIC_DEV_ORIGIN!]
 };
 
 export default nextConfig;
