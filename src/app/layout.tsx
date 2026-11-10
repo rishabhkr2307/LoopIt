@@ -2,10 +2,13 @@ import type { Metadata } from "next";
 import localFont from 'next/font/local'
 
 import "./globals.css";
+import { cn } from "@/lib/utils";
+import { TooltipProvider } from "@/components/ui/tooltip"
+
 
 const manrope = localFont({
   src: '../../public/fonts/Manrope-VariableFont_wght.ttf',
-  variable: "--font-manrope",
+  variable: "--font-sans",
   display: "swap",
   weight: "200 800",
 })
@@ -19,9 +22,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${manrope.className} h-full antialiased`}
+      className={cn("h-full", "antialiased", manrope.className, "font-sans", manrope.variable)}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col"><TooltipProvider>{children}</TooltipProvider></body>
     </html>
   );
 }
