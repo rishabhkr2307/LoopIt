@@ -20,7 +20,7 @@ export async function signUpWithEmail(_prevState: { error: string } | null, form
     return { error: error.message || 'Failed to create account' }
   }
 
-  redirect('/')
+  redirect('/verify-email')
 }
 
 export async function signInWithEmail(_prevState: { error: string } | null, formData: FormData) {

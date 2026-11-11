@@ -6,7 +6,7 @@ import { cities } from './cities'
 export const items = pgTable(
   'items',
   (t) => ({
-    id: t.uuid('id').primaryKey(),
+    id: t.uuid('id').defaultRandom().primaryKey(),
     ownerId: t.uuid('owner_id').references(() => profiles.id, { onDelete: 'cascade' }),
     name: t.text('name').notNull(),
     description: t.text('description').notNull(),

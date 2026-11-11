@@ -4,7 +4,7 @@ import { cities } from './cities'
 export const profiles = pgTable(
   'profiles',
   (t) => ({
-    id: t.uuid('id').primaryKey(),
+    id: t.uuid('id').defaultRandom().primaryKey(),
     userId: t.text('user_id').notNull(),
     bio: t.text('bio'),
     avatar: t.text('avatar'),

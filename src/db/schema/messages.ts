@@ -5,7 +5,7 @@ import { conversations } from './conversations'
 export const messages = pgTable(
   'messages',
   (t) => ({
-    id: t.uuid('id').primaryKey(),
+    id: t.uuid('id').defaultRandom().primaryKey(),
     conversationId: t
       .uuid('conversation_id')
       .references(() => conversations.id, { onDelete: 'cascade' }),

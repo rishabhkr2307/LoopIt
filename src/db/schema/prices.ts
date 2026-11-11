@@ -5,7 +5,7 @@ import { items } from './items'
 export const prices = pgTable(
   'prices',
   (t) => ({
-    id: t.uuid('id').primaryKey(),
+    id: t.uuid('id').defaultRandom().primaryKey(),
     itemId: t
       .uuid()
       .notNull()

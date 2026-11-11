@@ -5,7 +5,7 @@ import { profiles } from './profiles'
 export const conversations = pgTable(
   'conversations',
   (t) => ({
-    id: t.uuid('id').primaryKey(),
+    id: t.uuid('id').defaultRandom().primaryKey(),
     itemId: t.uuid('item_id').references(() => items.id, { onDelete: 'cascade' }),
     ownerId: t.uuid('owner_id').references(() => profiles.id, { onDelete: 'cascade' }),
     borrowerId: t.uuid('borrower_id').references(() => profiles.id, { onDelete: 'cascade' }),
