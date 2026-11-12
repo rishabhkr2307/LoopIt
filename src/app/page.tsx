@@ -1,22 +1,29 @@
 import { CreateItemDialog } from '@/components/create-item-dialog'
-import SignOut from '@/components/signout'
-import { Card, CardContent } from '@/components/ui/card'
-import { auth } from '@/lib/auth/server'
-
-// Server components using auth methods must be rendered dynamically
-export const dynamic = 'force-dynamic'
+import { getItemsNearMe } from './actions/items'
+import { ItemCard } from '@/components/item-card'
 
 export default async function Home() {
-  const { data: session } = await auth.getSession()
+  const { success, error, data } = await getItemsNearMe()
+
+  if (!success || !data) return <div>Failed {JSON.stringify(error, null, 2)}</div>
+  if (data.length == 0)
+    return (
+      <div>
+        No Items exists <CreateItemDialog />
+      </div>
+    )
   return (
     <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-muted p-6 md:p-10">
-      <Card>
-        <CardContent>
-          <p>Hi, {JSON.stringify(session, null, 2)}</p>
-          <SignOut />
-          <CreateItemDialog />
-        </CardContent>
-      </Card>
+      {data.map((item) => (
+        <ItemCard
+          key={item.id}
+          name={item.name}
+          description={item.description}
+          imageUrl={item.imageUrl}
+          pricePerDay={item.pricePerDay}
+        />
+      ))}
+      <CreateItemDialog />
     </div>
   )
 }

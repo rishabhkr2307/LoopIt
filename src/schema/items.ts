@@ -25,7 +25,7 @@ export const createItemSchema = z.object({
   image: z
     .instanceof(File, { message: 'Image is required' })
     .refine((file) => file.size > 0, 'Image is required')
-    .refine((file) => file.size <= 1024 * 1024, 'Image size should be under 1MB'),
+    .refine((file) => file.size < 5 * 1024 * 1024, 'Image size should be under 5MB'),
   category: category,
   status: status,
   pricePerDay: z.coerce.number().min(0, 'Must be a positive number or zero'),

@@ -10,13 +10,13 @@ export const items = pgTable(
     ownerId: t.uuid('owner_id').references(() => profiles.id, { onDelete: 'cascade' }),
     name: t.text('name').notNull(),
     description: t.text('description').notNull(),
-    imageUrl: t.text('image_url'),
+    imageUrl: t.text('image_url').notNull(),
     itemCategory: itemCategory('item_category').notNull(),
     itemStatus: itemStatus('item_status').default('available'),
     cityId: t.uuid('city_id').references(() => cities.id),
-    pricePerDay: t.integer('price_per_day').default(0),
-    pricePerWeek: t.integer('price_per_week').default(0),
-    pricePerMonth: t.integer('price_per_month').default(0),
+    pricePerDay: t.integer('price_per_day').default(0).notNull(),
+    pricePerWeek: t.integer('price_per_week').default(0).notNull(),
+    pricePerMonth: t.integer('price_per_month').default(0).notNull(),
     createdAt: t.timestamp('created_at').notNull().defaultNow(),
     updatedAt: t
       .timestamp('updated_at')
