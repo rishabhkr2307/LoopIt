@@ -104,8 +104,16 @@ export function CreateItemDialog() {
               </Select>
             </Field>
             <Field>
-              <Label htmlFor="name">Price</Label>
-              <Input id="price" name="price" value={0} type="number" />
+              <Label htmlFor="price_per_day">Price Per Day</Label>
+              <Input id="price_per_day" name="price_per_day" value={0} type="number" />
+            </Field>
+            <Field>
+              <Label htmlFor="price_per_week">Price Per Week</Label>
+              <Input id="price_per_week" name="price_per_week" value={0} type="number" />
+            </Field>
+            <Field>
+              <Label htmlFor="price_per_month">Price Per Month</Label>
+              <Input id="price_per_month" name="price_per_month" value={0} type="number" />
             </Field>
             <Field>
               <FieldLabel htmlFor="status">Status</FieldLabel>

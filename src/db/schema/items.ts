@@ -14,7 +14,9 @@ export const items = pgTable(
     itemCategory: itemCategory('item_category').notNull(),
     itemStatus: itemStatus('item_status').default('available'),
     cityId: t.uuid('city_id').references(() => cities.id),
-    price: t.integer().default(0),
+    pricePerDay: t.integer('price_per_day').default(0),
+    pricePerWeek: t.integer('price_per_week').default(0),
+    pricePerMonth: t.integer('price_per_month').default(0),
     createdAt: t.timestamp('created_at').notNull().defaultNow(),
     updatedAt: t
       .timestamp('updated_at')

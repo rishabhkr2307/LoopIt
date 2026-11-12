@@ -1,6 +1,6 @@
 'use server'
 import { db } from '@/db'
-import { items } from '@/db/schema/items'
+import { Item, items } from '@/db/schema/items'
 import { auth } from '@/lib/auth/server'
 import { files } from '@/lib/storage/upload'
 import { createItemSchema } from '@/schema/items'
@@ -16,6 +16,9 @@ export async function createItem(_prevState: { error: string } | null, formData:
     price: formData.get('price'),
     category: formData.get('category'),
     status: formData.get('status'),
+    pricePerDay: formData.get('price_per_day'),
+    pricePerWeek: formData.get('price_per_week'),
+    pricePerMonth: formData.get('price_per_month'),
   })
 
   if (!success) {
@@ -46,7 +49,9 @@ export async function createItem(_prevState: { error: string } | null, formData:
     name: data.name,
     description: data.description,
     itemCategory: data.category,
-    price: data.price,
+    pricePerDay: data.pricePerDay,
+    pricePerWeek: data.pricePerWeek,
+    pricePerMonth: data.pricePerMonth,
     cityId: profile.cityId,
     ownerId: profile.id,
     imageUrl,
@@ -62,4 +67,76 @@ export async function deleteItemById(itemId: string) {
   }
 
   await db.delete(items).where(and(eq(items.id, itemId), eq(items.ownerId, data.user.id)))
+}
+
+export async function getItemById(itemId: string): Promise<{
+  success: boolean
+  error?: string
+  data?: Item
+}> {
+  const { data: session } = await auth.getSession()
+  if (!session?.user) {
+    return { success: false, error: 'You should be logged in.' }
+  }
+  const item = await db.query.items.findFirst({
+    where: {
+      id: itemId,
+    },
+  })
+
+  if (!item) {
+    return { success: false, error: 'Item not found' }
+  }
+  return { success: true, data: item }
+}
+
+export async function getItemsNearMe(): Promise<{
+  success: boolean
+  error?: string
+  data?: Item[]
+}> {
+  const { data: session } = await auth.getSession()
+  if (!session?.user) {
+    return { success: false, error: 'You should be logged in.' }
+  }
+  const profile = await db.query.profiles.findFirst({
+    where: {
+      userId: session.user.id,
+    },
+  })
+
+  if (!profile) {
+    return { success: false, error: 'You should have a profile first.' }
+  }
+  const items = await db.query.items.findMany({
+    where: {
+      cityId: profile.cityId,
+    },
+  })
+  if (!items) {
+    return { success: false, error: 'No item exist in your city' }
+  }
+
+  return { success: true, data: items }
+}
+
+export async function getItemsByCity(cityId: string): Promise<{
+  success: boolean
+  error?: string
+  data?: Item[]
+}> {
+  const { data: session } = await auth.getSession()
+  if (!session?.user) {
+    return { success: false, error: 'You should be logged in.' }
+  }
+  const items = await db.query.items.findMany({
+    where: {
+      cityId: cityId,
+    },
+  })
+  if (!items) {
+    return { success: false, error: 'No item exist in city' }
+  }
+
+  return { success: true, data: items }
 }

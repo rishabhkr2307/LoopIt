@@ -28,5 +28,7 @@ export const createItemSchema = z.object({
     .refine((file) => file.size <= 1024 * 1024, 'Image size should be under 1MB'),
   category: category,
   status: status,
-  price: z.coerce.number().min(0, 'Negative values not allowed'),
+  pricePerDay: z.coerce.number().min(0, 'Must be a positive number or zero'),
+  pricePerWeek: z.coerce.number().min(0, 'Must be a positive number or zero'),
+  pricePerMonth: z.coerce.number().min(0, 'Must be a positive number or zero'),
 })
