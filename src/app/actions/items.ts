@@ -113,9 +113,6 @@ export async function getItemsNearMe(): Promise<{
       cityId: profile.cityId,
     },
   })
-  if (!items) {
-    return { success: false, error: 'No item exist in your city' }
-  }
 
   return { success: true, data: items }
 }
