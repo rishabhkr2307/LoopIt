@@ -19,3 +19,6 @@ export const messages = pgTable(
   }),
   (table) => [index('conversation_id_idx').on(table.conversationId)],
 )
+
+export type Message = typeof messages.$inferSelect
+export type NewMessage = typeof messages.$inferInsert

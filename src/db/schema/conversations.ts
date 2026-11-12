@@ -17,3 +17,6 @@ export const conversations = pgTable(
   }),
   (table) => [unique('unique_item_borrower').on(table.itemId, table.borrowerId)],
 )
+
+export type Conversation = typeof conversations.$inferSelect
+export type NewConversation = typeof conversations.$inferInsert

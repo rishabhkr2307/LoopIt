@@ -20,3 +20,6 @@ export const prices = pgTable(
   }),
   (table) => [index('item_id_idx').on(table.itemId)],
 )
+
+export type Price = typeof prices.$inferSelect
+export type NewPrice = typeof prices.$inferInsert

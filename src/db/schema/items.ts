@@ -23,3 +23,6 @@ export const items = pgTable(
   }),
   (table) => [index('owner_id_idx').on(table.ownerId), index('city_id_idx').on(table.cityId)],
 )
+
+export type Item = typeof items.$inferSelect
+export type NewItem = typeof items.$inferInsert

@@ -14,3 +14,6 @@ export const cities = pgTable(
   }),
   (table) => [index('pincode_idx').on(table.pincode)],
 )
+
+export type City = typeof cities.$inferSelect
+export type NewCity = typeof cities.$inferInsert
