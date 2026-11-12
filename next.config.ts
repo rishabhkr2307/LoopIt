@@ -11,6 +11,19 @@ const nextConfig: NextConfig = {
     },
   },
   allowedDevOrigins: [process.env.NEXT_PUBLIC_DEV_ORIGIN!],
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: process.env.IMAGE_HOSTNAME!,
+      },
+    ],
+  },
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '5mb',
+    },
+  },
 }
 
 export default nextConfig
