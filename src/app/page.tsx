@@ -1,4 +1,4 @@
-import { CreateItemDialog } from '@/components/create-item-dialog'
+import { CreateProfileDialog } from '@/components/create-profile-dialog'
 import SignOut from '@/components/signout'
 import { Card, CardContent } from '@/components/ui/card'
 import { auth } from '@/lib/auth/server'
@@ -14,7 +14,7 @@ export default async function Home() {
         <CardContent>
           <p>Hi, {JSON.stringify(session, null, 2)}</p>
           <SignOut />
-          <CreateItemDialog />
+          <CreateProfileDialog />
         </CardContent>
       </Card>
     </div>
