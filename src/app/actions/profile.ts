@@ -62,3 +62,20 @@ export async function createProfile(_prevState: { error: string } | null, formDa
   })
   redirect('/')
 }
+
+export async function profileExists(): Promise<boolean> {
+  const { data: session } = await auth.getSession()
+  if (!session?.user) {
+    return false
+  }
+  const profile = await db.query.profiles.findFirst({
+    where: {
+      userId: session.user.id,
+    },
+  })
+
+  if (profile) {
+    return true
+  }
+  return false
+}

@@ -17,12 +17,18 @@ import { Textarea } from './ui/textarea'
 import { useActionState } from 'react'
 import { createProfile } from '@/app/actions/profile'
 
-export function CreateProfileDialog() {
+export function CreateProfileDialog({ open }: { open: boolean }) {
   const [state, formAction, isPending] = useActionState(createProfile, null)
 
   return (
-    <Dialog>
-      <DialogTrigger render={<Button variant="outline">Create Profile</Button>} />
+    <Dialog open={open}>
+      <DialogTrigger
+        render={
+          <Button hidden variant="outline">
+            Create Profile
+          </Button>
+        }
+      />
       <DialogContent className="sm:max-w-sm">
         <form action={formAction}>
           <DialogHeader>

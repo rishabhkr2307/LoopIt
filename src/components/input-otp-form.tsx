@@ -10,7 +10,7 @@ import {
 import { Field, FieldLabel } from '@/components/ui/field'
 import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from '@/components/ui/input-otp'
 import { authClient } from '@/lib/auth/client'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { toast } from 'sonner'
 
@@ -31,7 +31,7 @@ export function InputOTPForm({ email }: { email: string }) {
       })
       .then(() => {
         toast.success('OTP Verification Success')
-        router.push('/onboarding')
+        router.push('/')
       })
       .catch((err) => toast.error(err.message))
   }
