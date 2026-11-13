@@ -1,9 +1,11 @@
 import { CreateItemDialog } from '@/components/create-item-dialog'
 import { getItemsNearMe } from './actions/items'
-import { ItemCard } from '@/components/item-card'
 import { profileExists } from './actions/profile'
 import { CreateProfileDialog } from '@/components/create-profile-dialog'
 import SignOut from '@/components/signout'
+import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
+import { AppSidebar } from '@/components/app-sidebar'
+import { SiteHeader } from '@/components/site-header'
 
 export default async function Home() {
   const exists = await profileExists()
@@ -24,18 +26,23 @@ export default async function Home() {
       </div>
     )
   return (
-    <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-muted p-6 md:p-10">
-      {data.map((item) => (
-        <ItemCard
-          key={item.id}
-          name={item.name}
-          description={item.description}
-          imageUrl={item.imageUrl}
-          pricePerDay={item.pricePerDay}
-        />
-      ))}
-      <CreateItemDialog />
-      <SignOut />
-    </div>
+    <SidebarProvider
+      style={
+        {
+          '--sidebar-width': 'calc(var(--spacing) * 72)',
+          '--header-height': 'calc(var(--spacing) * 12)',
+        } as React.CSSProperties
+      }
+    >
+      <AppSidebar variant="inset" />
+      <SidebarInset>
+        <SiteHeader />
+        <div className="flex flex-1 flex-col">
+          <div className="@container/main flex flex-1 flex-col gap-2">
+            <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6"></div>
+          </div>
+        </div>
+      </SidebarInset>
+    </SidebarProvider>
   )
 }
