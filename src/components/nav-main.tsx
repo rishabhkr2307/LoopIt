@@ -1,6 +1,5 @@
 'use client'
 
-import { Button } from '@/components/ui/button'
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -8,7 +7,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar'
-import { PlusCircleIcon, EnvelopeIcon } from '@phosphor-icons/react'
 import { Field, FieldLabel } from './ui/field'
 import { Checkbox } from './ui/checkbox'
 
