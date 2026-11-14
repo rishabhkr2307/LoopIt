@@ -6,7 +6,7 @@ import { Item } from '@/db/schema/items'
 export default function FilterPage({ items }: { items: Item[] }) {
   return (
     <div className="mx-auto w-full max-w-7xl p-4 md:p-6">
-      <h1 className="mb-6 text-2xl font-bold">Rent Items Near You</h1>
+      <h1 className="mb-6 text-2xl font-bold">LoopIt</h1>
 
       <div className="flex flex-col gap-8 lg:flex-row">
         {/* Sidebar Filters */}

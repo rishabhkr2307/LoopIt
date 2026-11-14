@@ -3,7 +3,7 @@
 import { redirect } from 'next/navigation'
 import { db } from '@/db'
 import { cities } from '@/db/schema/cities'
-import { profiles } from '@/db/schema/profiles'
+import { Profile, profiles } from '@/db/schema/profiles'
 import { auth } from '@/lib/auth/server'
 import { createProfileSchema } from '@/schema/profile'
 import { randomUUID } from 'crypto'
@@ -63,19 +63,20 @@ export async function createProfile(_prevState: { error: string } | null, formDa
   redirect('/')
 }
 
-export async function profileExists(): Promise<boolean> {
+export async function getUserProfile(): Promise<{
+  success: boolean
+  err?: string
+  data?: Profile
+}> {
   const { data: session } = await auth.getSession()
   if (!session?.user) {
-    return false
+    return { success: false, err: 'You should be logged in.' }
   }
   const profile = await db.query.profiles.findFirst({
     where: {
       userId: session.user.id,
     },
   })
-
-  if (profile) {
-    return true
-  }
-  return false
+  if (!profile) return { success: false, err: 'Profile not found' }
+  return { success: true, data: profile }
 }

@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { Button } from './ui/button'
 import { XIcon } from '@phosphor-icons/react'
-import { Badge } from './ui/badge'
 import { ScrollArea } from './ui/scroll-area'
 import { Checkbox } from './ui/checkbox'
 import { useQueryState } from 'nuqs'
@@ -27,20 +26,56 @@ const itemCategories = [
   { label: 'Photography & Production', value: 'photography_production' },
   { label: 'Entertainment & Recreation', value: 'entertainment_recreation' },
 ] as const
+const itemPricing = [
+  { label: 'Lowest First', value: 'asc' },
+  { label: 'Highest First', value: 'desc' },
+] as const
+const itemTimings = [
+  { label: 'Newest First', value: 'asc' },
+  { label: 'Oldest First', value: 'desc' },
+] as const
+const popularCities = [
+  { label: 'Banglore', value: '8578b136-d0ad-4dcb-a279-d44761dc3560' },
+  { label: 'Delhi', value: 'ee91a6ec-df03-401a-a7a2-aae39675278e' },
+  { label: 'Chennai', value: 'e8b9d140-93f9-42bf-b8a4-557f02f19564' },
+  { label: 'Kolkata', value: '057a4d79-b384-40c4-8cd0-1cd9bf466f08' },
+  { label: 'Bilaspur', value: 'db1b08a9-8ee4-44b8-80d4-e80611a67a03' },
+] as const
 
 export function SidebarFilters() {
   const [showMobileFilters, setShowMobileFilters] = useState(false)
   const [category, setCategory] = useQueryState('category', {
     shallow: false,
   })
-  const activeFiltersCount = category ? 1 : 0
+  const [orderByPrice, setOrderByPrice] = useQueryState('orderByPrice', {
+    shallow: false,
+  })
+  const [orderByTiming, setOrderByTiming] = useQueryState('orderByTiming', {
+    shallow: false,
+  })
+  const [popCityId, setPopCityId] = useQueryState('cityId', {
+    shallow: false,
+  })
+  const activeFilters = category || orderByPrice || orderByTiming || popCityId ? 1 : 0
 
   const toggleCategory = (category: string) => {
     setCategory((prev) => (prev == category ? null : category))
   }
+  const toggleOrderByPrice = (order: string) => {
+    setOrderByPrice((prev) => (prev == order ? null : order))
+  }
+  const toggleOrderByTiming = (order: string) => {
+    setOrderByTiming((prev) => (prev == order ? null : order))
+  }
+  const togglePopCityId = (cityId: string) => {
+    setPopCityId((prev) => (prev == cityId ? null : cityId))
+  }
 
   const clearFilters = () => {
     setCategory(null)
+    setOrderByPrice(null)
+    setOrderByTiming(null)
+    setPopCityId(null)
   }
 
   const ratings = [4, 3, 2, 1]
@@ -55,13 +90,8 @@ export function SidebarFilters() {
           className="flex items-center gap-2"
         >
           Filters
-          {activeFiltersCount > 0 && (
-            <Badge variant="secondary" className="ml-1">
-              {activeFiltersCount}
-            </Badge>
-          )}
         </Button>
-        {activeFiltersCount > 0 && (
+        {activeFilters > 0 && (
           <Button variant="ghost" size="sm" onClick={clearFilters}>
             Clear all
           </Button>
@@ -100,7 +130,7 @@ export function SidebarFilters() {
       <div className="hidden w-64 shrink-0 lg:block">
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-lg font-semibold">Filters</h2>
-          {activeFiltersCount > 0 && (
+          {activeFilters > 0 && (
             <Button variant="ghost" size="sm" onClick={clearFilters}>
               Clear all
             </Button>
@@ -128,6 +158,65 @@ export function SidebarFilters() {
                   className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                 >
                   {item.label}
+                </label>
+              </div>
+            ))}
+          </div>
+        </FilterSection>
+        <FilterSection title="Pricing">
+          <div className="space-y-2">
+            {itemPricing.map((item) => (
+              <div key={item.value} className="flex items-center space-x-2">
+                <Checkbox
+                  id={`orderByPrice-${item.value}`}
+                  checked={orderByPrice == item.value}
+                  onCheckedChange={() => toggleOrderByPrice(item.value)}
+                />
+                <label
+                  htmlFor={`orderByPrice-${orderByPrice}`}
+                  className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  {item.label}
+                </label>
+              </div>
+            ))}
+          </div>
+        </FilterSection>
+
+        <FilterSection title="Timing">
+          <div className="space-y-2">
+            {itemTimings.map((item) => (
+              <div key={item.value} className="flex items-center space-x-2">
+                <Checkbox
+                  id={`orderByTiming-${item.value}`}
+                  checked={orderByTiming == item.value}
+                  onCheckedChange={() => toggleOrderByTiming(item.value)}
+                />
+                <label
+                  htmlFor={`orderByTiming-${orderByTiming}`}
+                  className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  {item.label}
+                </label>
+              </div>
+            ))}
+          </div>
+        </FilterSection>
+
+        <FilterSection title="Popular Cities">
+          <div className="space-y-2">
+            {popularCities.map((city) => (
+              <div key={city.value} className="flex items-center space-x-2">
+                <Checkbox
+                  id={`popCityId-${city.value}`}
+                  checked={popCityId == city.value}
+                  onCheckedChange={() => togglePopCityId(city.value)}
+                />
+                <label
+                  htmlFor={`popCityId-${popCityId}`}
+                  className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  {city.label}
                 </label>
               </div>
             ))}

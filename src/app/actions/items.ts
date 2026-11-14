@@ -1,5 +1,6 @@
 'use server'
 import { db } from '@/db'
+import { itemCategory } from '@/db/schema/enums'
 import { Item, items } from '@/db/schema/items'
 import { auth } from '@/lib/auth/server'
 import { files } from '@/lib/storage/upload'
@@ -90,7 +91,12 @@ export async function getItemById(itemId: string): Promise<{
   return { success: true, data: item }
 }
 
-export async function getItemsNearMe(): Promise<{
+export async function getItemsWithFilters(filters: {
+  category?: string
+  cityId?: string
+  orderByTime?: 'asc' | 'desc'
+  orderByPrice?: 'asc' | 'desc'
+}): Promise<{
   success: boolean
   error?: string
   data?: Item[]
@@ -108,13 +114,20 @@ export async function getItemsNearMe(): Promise<{
   if (!profile) {
     return { success: false, error: 'You should have a profile first.' }
   }
-  const items = await db.query.items.findMany({
+  const dbItems = await db.query.items.findMany({
     where: {
-      cityId: profile.cityId,
+      ...(filters.cityId ? { cityId: filters.cityId } : {}),
+      ...(filters.category
+        ? { itemCategory: filters.category as (typeof itemCategory.enumValues)[number] }
+        : {}),
+    },
+    orderBy: {
+      ...(filters.orderByTime ? { createdAt: filters.orderByTime } : {}),
+      ...(filters.orderByPrice ? { pricePerDay: filters.orderByPrice } : {}),
     },
   })
 
-  return { success: true, data: items }
+  return { success: true, data: dbItems }
 }
 
 export async function getItemsByCity(cityId: string): Promise<{
