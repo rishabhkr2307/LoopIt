@@ -12,13 +12,13 @@ export default function FilterPage({ items }: { items: Item[] }) {
         {/* Sidebar Filters */}
         <SidebarFilters />
 
-        {/* Product Grid */}
+        {/* Item Grid */}
         <div className="flex-1">
           <div className="text-muted-foreground mb-4 text-sm">{items.length} items found</div>
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {items.map((product) => (
-              <ItemCard key={product.id} product={product} />
+            {items.map((item) => (
+              <ItemCard key={item.id} item={item} />
             ))}
           </div>
 
