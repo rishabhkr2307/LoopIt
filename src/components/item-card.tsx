@@ -1,3 +1,4 @@
+'use client'
 import { PlusIcon, StarIcon } from '@phosphor-icons/react'
 import { Button } from './ui/button'
 import Image from 'next/image'

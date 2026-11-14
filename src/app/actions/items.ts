@@ -130,7 +130,7 @@ export async function getItemsWithFilters(filters: {
   return { success: true, data: dbItems }
 }
 
-export async function getItemsByCity(cityId: string): Promise<{
+export async function getItemsByProfile(profileId: string): Promise<{
   success: boolean
   error?: string
   data?: Item[]
@@ -141,7 +141,7 @@ export async function getItemsByCity(cityId: string): Promise<{
   }
   const items = await db.query.items.findMany({
     where: {
-      cityId: cityId,
+      ownerId: profileId,
     },
   })
   if (!items) {
