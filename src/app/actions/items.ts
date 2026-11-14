@@ -25,38 +25,43 @@ export async function createItem(_prevState: { error: string } | null, formData:
   if (!success) {
     return { error: error.issues[0].message || 'Validation error' }
   }
-  const { data: session } = await auth.getSession()
-  if (!session?.user) {
-    return { error: 'You should be logged in.' }
+  try {
+    const { data: session } = await auth.getSession()
+    if (!session?.user) {
+      return { error: 'You should be logged in.' }
+    }
+
+    const profile = await db.query.profiles.findFirst({
+      where: {
+        userId: session.user.id,
+      },
+    })
+
+    if (!profile) {
+      return { error: 'You should have a profile first.' }
+    }
+    const filename = `${randomUUID()}-${data.image.name}`
+
+    await files.upload(`items/${filename}`, data.image, {
+      contentType: data.image.type,
+    })
+    const imageUrl = await files.url(`items/${filename}`)
+
+    await db.insert(items).values({
+      name: data.name,
+      description: data.description,
+      itemCategory: data.category,
+      pricePerDay: data.pricePerDay,
+      pricePerWeek: data.pricePerWeek,
+      pricePerMonth: data.pricePerMonth,
+      cityId: profile.cityId,
+      ownerId: profile.id,
+      imageUrl,
+    })
+  } catch (error) {
+    console.error('Error at createItem', error)
+    return { error: 'Something went wrong' }
   }
-
-  const profile = await db.query.profiles.findFirst({
-    where: {
-      userId: session.user.id,
-    },
-  })
-
-  if (!profile) {
-    return { error: 'You should have a profile first.' }
-  }
-  const filename = `${randomUUID()}-${data.image.name}`
-
-  await files.upload(`items/${filename}`, data.image, {
-    contentType: data.image.type,
-  })
-  const imageUrl = await files.url(`items/${filename}`)
-
-  await db.insert(items).values({
-    name: data.name,
-    description: data.description,
-    itemCategory: data.category,
-    pricePerDay: data.pricePerDay,
-    pricePerWeek: data.pricePerWeek,
-    pricePerMonth: data.pricePerMonth,
-    cityId: profile.cityId,
-    ownerId: profile.id,
-    imageUrl,
-  })
 
   redirect('/')
 }
@@ -67,7 +72,11 @@ export async function deleteItemById(itemId: string) {
     return { error: 'You should be logged in.' }
   }
 
-  await db.delete(items).where(and(eq(items.id, itemId), eq(items.ownerId, data.user.id)))
+  try {
+    await db.delete(items).where(and(eq(items.id, itemId), eq(items.ownerId, data.user.id)))
+  } catch (error) {
+    console.error('Error at deleteItemById', error)
+  }
 }
 
 export async function getItemById(itemId: string): Promise<{
@@ -75,20 +84,25 @@ export async function getItemById(itemId: string): Promise<{
   error?: string
   data?: Item
 }> {
-  const { data: session } = await auth.getSession()
-  if (!session?.user) {
-    return { success: false, error: 'You should be logged in.' }
-  }
-  const item = await db.query.items.findFirst({
-    where: {
-      id: itemId,
-    },
-  })
+  try {
+    const { data: session } = await auth.getSession()
+    if (!session?.user) {
+      return { success: false, error: 'You should be logged in.' }
+    }
+    const item = await db.query.items.findFirst({
+      where: {
+        id: itemId,
+      },
+    })
 
-  if (!item) {
-    return { success: false, error: 'Item not found' }
+    if (!item) {
+      return { success: false, error: 'Item not found' }
+    }
+    return { success: true, data: item }
+  } catch (error) {
+    console.error('Error at getItemById', error)
+    return { success: false, error: 'Something went wrong' }
   }
-  return { success: true, data: item }
 }
 
 export async function getItemsWithFilters(filters: {
@@ -101,33 +115,38 @@ export async function getItemsWithFilters(filters: {
   error?: string
   data?: Item[]
 }> {
-  const { data: session } = await auth.getSession()
-  if (!session?.user) {
-    return { success: false, error: 'You should be logged in.' }
-  }
-  const profile = await db.query.profiles.findFirst({
-    where: {
-      userId: session.user.id,
-    },
-  })
+  try {
+    const { data: session } = await auth.getSession()
+    if (!session?.user) {
+      return { success: false, error: 'You should be logged in.' }
+    }
+    const profile = await db.query.profiles.findFirst({
+      where: {
+        userId: session.user.id,
+      },
+    })
 
-  if (!profile) {
-    return { success: false, error: 'You should have a profile first.' }
-  }
-  const dbItems = await db.query.items.findMany({
-    where: {
-      ...(filters.cityId ? { cityId: filters.cityId } : {}),
-      ...(filters.category
-        ? { itemCategory: filters.category as (typeof itemCategory.enumValues)[number] }
-        : {}),
-    },
-    orderBy: {
-      ...(filters.orderByTime ? { createdAt: filters.orderByTime } : {}),
-      ...(filters.orderByPrice ? { pricePerDay: filters.orderByPrice } : {}),
-    },
-  })
+    if (!profile) {
+      return { success: false, error: 'You should have a profile first.' }
+    }
+    const dbItems = await db.query.items.findMany({
+      where: {
+        ...(filters.cityId ? { cityId: filters.cityId } : {}),
+        ...(filters.category
+          ? { itemCategory: filters.category as (typeof itemCategory.enumValues)[number] }
+          : {}),
+      },
+      orderBy: {
+        ...(filters.orderByTime ? { createdAt: filters.orderByTime } : {}),
+        ...(filters.orderByPrice ? { pricePerDay: filters.orderByPrice } : {}),
+      },
+    })
 
-  return { success: true, data: dbItems }
+    return { success: true, data: dbItems }
+  } catch (error) {
+    console.error('Error at getItemsWithFilters', error)
+    return { success: false, error: 'Something went wrong' }
+  }
 }
 
 export async function getItemsByProfile(profileId: string): Promise<{
@@ -135,18 +154,23 @@ export async function getItemsByProfile(profileId: string): Promise<{
   error?: string
   data?: Item[]
 }> {
-  const { data: session } = await auth.getSession()
-  if (!session?.user) {
-    return { success: false, error: 'You should be logged in.' }
-  }
-  const items = await db.query.items.findMany({
-    where: {
-      ownerId: profileId,
-    },
-  })
-  if (!items) {
-    return { success: false, error: 'No item exist in city' }
-  }
+  try {
+    const { data: session } = await auth.getSession()
+    if (!session?.user) {
+      return { success: false, error: 'You should be logged in.' }
+    }
+    const items = await db.query.items.findMany({
+      where: {
+        ownerId: profileId,
+      },
+    })
+    if (!items) {
+      return { success: false, error: 'No item exist in city' }
+    }
 
-  return { success: true, data: items }
+    return { success: true, data: items }
+  } catch (error) {
+    console.error('Error at getItemsByProfile', error)
+    return { success: false, error: 'Something went wrong' }
+  }
 }

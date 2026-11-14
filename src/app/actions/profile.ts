@@ -20,63 +20,73 @@ export async function createProfile(_prevState: { error: string } | null, formDa
   if (!success) {
     return { error: error.issues[0].message || 'Validation error' }
   }
-  const { data: session } = await auth.getSession()
-  if (!session?.user) {
-    return { error: 'You should be logged in.' }
-  }
-  const profile = await db.query.profiles.findFirst({
-    where: {
-      userId: session.user.id,
-    },
-  })
+  try {
+    const { data: session } = await auth.getSession()
+    if (!session?.user) {
+      return { error: 'You should be logged in.' }
+    }
+    const profile = await db.query.profiles.findFirst({
+      where: {
+        userId: session.user.id,
+      },
+    })
 
-  if (profile) {
-    return { error: 'Profile already exists.' }
-  }
-  let city = await db.query.cities.findFirst({
-    where: {
-      pincode: data.pincode,
-    },
-  })
-  if (!city) {
-    const [created] = await db
-      .insert(cities)
-      .values({
-        name: data.city,
+    if (profile) {
+      return { error: 'Profile already exists.' }
+    }
+    let city = await db.query.cities.findFirst({
+      where: {
         pincode: data.pincode,
-      })
-      .returning()
-    city = created
-  }
-  const filename = `${randomUUID()}-${data.avatar.name}`
+      },
+    })
+    if (!city) {
+      const [created] = await db
+        .insert(cities)
+        .values({
+          name: data.city,
+          pincode: data.pincode,
+        })
+        .returning()
+      city = created
+    }
+    const filename = `${randomUUID()}-${data.avatar.name}`
 
-  await files.upload(`avatars/${filename}`, data.avatar, {
-    contentType: data.avatar.type,
-  })
-  const avatarUrl = await files.url(`avatars/${filename}`)
-  await db.insert(profiles).values({
-    avatar: avatarUrl,
-    bio: data.bio,
-    cityId: city.id,
-    userId: session.user.id,
-  })
+    await files.upload(`avatars/${filename}`, data.avatar, {
+      contentType: data.avatar.type,
+    })
+    const avatarUrl = await files.url(`avatars/${filename}`)
+    await db.insert(profiles).values({
+      avatar: avatarUrl,
+      bio: data.bio,
+      cityId: city.id,
+      userId: session.user.id,
+    })
+  } catch (error) {
+    console.error('Error at signInWithEmail', error)
+    return { error: 'Something went wrong' }
+  }
   redirect('/')
 }
 
 export async function getUserProfile(): Promise<{
   success: boolean
-  err?: string
+  error?: string
   data?: Profile
 }> {
-  const { data: session } = await auth.getSession()
-  if (!session?.user) {
-    return { success: false, err: 'You should be logged in.' }
+  try {
+    const { data: session } = await auth.getSession()
+    if (!session?.user) {
+      return { success: false, error: 'You should be logged in.' }
+    }
+    const profile = await db.query.profiles.findFirst({
+      where: {
+        userId: session.user.id,
+      },
+    })
+    if (!profile) return { success: false, error: 'Profile not found' }
+    return { success: true, data: profile }
+  } catch (error) {
+    console.error('Error at getItemsByProfile', error)
+    return { success: false, error: 'Something went wrong' }
   }
-  const profile = await db.query.profiles.findFirst({
-    where: {
-      userId: session.user.id,
-    },
-  })
-  if (!profile) return { success: false, err: 'Profile not found' }
-  return { success: true, data: profile }
 }
