@@ -10,7 +10,11 @@ function SignOut() {
     await authClient.signOut()
     router.push('/sign-in')
   }
-  return <Button onClick={handleSignOut}> Sign Out</Button>
+  return (
+    <Button onClick={handleSignOut} className="w-full">
+      Sign Out
+    </Button>
+  )
 }
 
 export default SignOut

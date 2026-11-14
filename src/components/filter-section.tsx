@@ -7,7 +7,7 @@ import { Separator } from './ui/separator'
 export const FilterSection = ({
   title,
   children,
-  defaultOpen = true,
+  defaultOpen = false,
 }: {
   title: string
   children: React.ReactNode

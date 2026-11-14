@@ -6,6 +6,8 @@ import { ScrollArea } from './ui/scroll-area'
 import { Checkbox } from './ui/checkbox'
 import { useQueryState } from 'nuqs'
 import { FilterSection } from './filter-section'
+import { CreateItemDialog } from './create-item-dialog'
+import SignOut from './signout'
 
 const itemCategories = [
   { label: 'Electronics & Gadgets', value: 'electronics_gadgets' },
@@ -155,6 +157,12 @@ export function SidebarFilters() {
               </div>
             ))}
           </div>
+        </FilterSection>
+        <FilterSection title="Lend Your Item">
+          <CreateItemDialog />
+        </FilterSection>
+        <FilterSection title="User">
+          <SignOut />
         </FilterSection>
       </div>
     )

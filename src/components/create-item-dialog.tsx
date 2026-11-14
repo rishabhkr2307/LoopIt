@@ -57,7 +57,7 @@ export function CreateItemDialog() {
     <Dialog>
       <DialogTrigger
         render={
-          <Button variant="outline" className="flex justify-center items-center">
+          <Button variant="outline" className="flex justify-center items-center w-full">
             <span>Item</span>
             <PlusIcon />
           </Button>
