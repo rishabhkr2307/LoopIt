@@ -4,5 +4,6 @@ import { neon } from 'files-sdk/neon'
 export const files = new Files({
   adapter: neon({
     bucket: process.env.S3_BUCKET!,
+    publicBaseUrl: process.env.STORAGE_PUBLIC_URL!,
   }),
 })

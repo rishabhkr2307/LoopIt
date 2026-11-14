@@ -8,6 +8,8 @@ import { AppSidebar } from '@/components/app-sidebar'
 import { SiteHeader } from '@/components/site-header'
 import { ItemCard } from '@/components/item-card'
 
+export const dynamic = 'force-dynamic'
+
 export default async function Home() {
   const exists = await profileExists()
   if (!exists)
@@ -50,6 +52,7 @@ export default async function Home() {
                   pricePerDay={item.pricePerDay}
                 />
               ))}
+              <CreateItemDialog />
             </div>
           </div>
         </div>
