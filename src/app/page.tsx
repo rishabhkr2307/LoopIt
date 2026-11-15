@@ -10,7 +10,7 @@ type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>
 export default async function Home({ searchParams }: { searchParams: SearchParams }) {
   const { success, data: profile } = await getUserProfile()
   const { category, cityId = profile?.cityId, orderByPrice, orderByTime } = await searchParams
-  if (!success)
+  if (!success || !profile)
     return (
       <div>
         <CreateProfileDialog open={!success} />
@@ -28,5 +28,5 @@ export default async function Home({ searchParams }: { searchParams: SearchParam
         ? orderByTime
         : undefined,
   })
-  return <FilterPage items={data ?? []} />
+  return <FilterPage items={data ?? []} profile={profile} />
 }

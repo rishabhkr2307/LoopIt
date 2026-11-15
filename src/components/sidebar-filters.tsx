@@ -7,7 +7,6 @@ import { Checkbox } from './ui/checkbox'
 import { useQueryState } from 'nuqs'
 import { FilterSection } from './filter-section'
 import { CreateItemDialog } from './create-item-dialog'
-import SignOut from './signout'
 import { itemCategories, itemPricing, itemTimings, popularCities } from '@/constants'
 
 export function SidebarFilters() {
@@ -217,9 +216,6 @@ export function SidebarFilters() {
         </FilterSection>
         <FilterSection title="Lend Your Item">
           <CreateItemDialog />
-        </FilterSection>
-        <FilterSection title="User">
-          <SignOut />
         </FilterSection>
       </div>
     )
