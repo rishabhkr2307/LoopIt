@@ -90,3 +90,20 @@ export async function getUserProfile(): Promise<{
     return { success: false, error: 'Something went wrong' }
   }
 }
+
+export async function getProfile(id: string): Promise<{
+  success: boolean
+  error?: string
+  data?: Profile
+}> {
+  try {
+    const profile = await db.query.profiles.findFirst({
+      where: { id },
+    })
+    if (!profile) return { success: false, error: 'Profile not found' }
+    return { success: true, data: profile }
+  } catch (error) {
+    console.error('Error at getProfile', error)
+    return { success: false, error: 'Something went wrong' }
+  }
+}
