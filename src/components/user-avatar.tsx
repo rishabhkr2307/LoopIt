@@ -20,7 +20,7 @@ export function UserAvatar({ profile }: { profile: Profile }) {
     router.push('/sign-in')
   }
   const handleProfile = () => {
-    router.push(`/profile/${profile.id}`)
+    router.push('/owner/profile')
   }
   return (
     <DropdownMenu>

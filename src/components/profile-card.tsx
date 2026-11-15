@@ -1,9 +1,10 @@
 'use client'
+import { CreateItemDialog } from './create-item-dialog'
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import { Card, CardContent } from './ui/card'
 import { Profile } from '@/db/schema/profiles'
 
-function ProfileCard({ profile }: { profile: Profile }) {
+function ProfileCard({ profile, isOwner }: { profile: Profile; isOwner: boolean }) {
   return (
     <div className="md:col-span-1">
       <Card className="p-0">
@@ -19,6 +20,11 @@ function ProfileCard({ profile }: { profile: Profile }) {
             <div className="flex justify-between text-sm text-center">
               <span>{profile.bio}</span>
             </div>
+            {isOwner && (
+              <div className="flex justify-between text-sm text-center">
+                <CreateItemDialog />
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>

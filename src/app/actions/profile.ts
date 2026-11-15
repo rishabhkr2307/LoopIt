@@ -8,6 +8,7 @@ import { auth } from '@/lib/auth/server'
 import { createProfileSchema } from '@/schema/profile'
 import { randomUUID } from 'crypto'
 import { files } from '@/lib/storage/upload'
+import { Item } from '@/db/schema/items'
 
 export async function createProfile(_prevState: { error: string } | null, formData: FormData) {
   const { success, data, error } = createProfileSchema.safeParse({
@@ -117,6 +118,62 @@ export async function getProfile(id: string): Promise<{
     }
   } catch (error) {
     console.error('Error at getProfile', error)
+    return { success: false, error: 'Something went wrong' }
+  }
+}
+
+export async function getOwnerProfileWithItems(): Promise<{
+  success: boolean
+  error?: string
+  data?: { profile: Profile; items: Item[] }
+}> {
+  try {
+    const { data: session } = await auth.getSession()
+    if (!session?.user) {
+      return { success: false, error: 'You should be logged in.' }
+    }
+    const profile = await db.query.profiles.findFirst({
+      where: {
+        userId: session.user.id,
+      },
+    })
+    if (!profile) return { success: false, error: 'Profile not found' }
+    const items = await db.query.items.findMany({
+      where: {
+        ownerId: profile.id,
+      },
+    })
+    return { success: true, data: { profile, items } }
+  } catch (error) {
+    console.error('Error at getOwnerProfileWithItems', error)
+    return { success: false, error: 'Something went wrong' }
+  }
+}
+
+export async function getUserProfileWithItems(profileId: string): Promise<{
+  success: boolean
+  error?: string
+  data?: { profile: Profile; items: Item[] }
+}> {
+  try {
+    const { data: session } = await auth.getSession()
+    if (!session?.user) {
+      return { success: false, error: 'You should be logged in.' }
+    }
+    const profile = await db.query.profiles.findFirst({
+      where: {
+        id: profileId,
+      },
+    })
+    if (!profile) return { success: false, error: 'Profile not found' }
+    const items = await db.query.items.findMany({
+      where: {
+        ownerId: profile.id,
+      },
+    })
+    return { success: true, data: { profile, items } }
+  } catch (error) {
+    console.error('Error at getUserProfileWithItems', error)
     return { success: false, error: 'Something went wrong' }
   }
 }

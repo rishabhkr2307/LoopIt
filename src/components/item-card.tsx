@@ -4,8 +4,10 @@ import Image from 'next/image'
 import { Item } from '@/db/schema/items'
 import { ViewItemDialog } from './view-item-dialog'
 import { itemCategories } from '@/constants'
+import { EditItemDialog } from './edit-item-dialog'
+import { DeleteItemDialog } from './delete-item-dialog'
 
-export const ItemCard = ({ item }: { item: Item }) => (
+export const ItemCard = ({ item, isOwner }: { item: Item; isOwner?: boolean }) => (
   <div className="group overflow-hidden rounded-lg border">
     <div className="relative aspect-square overflow-hidden bg-gray-100">
       <Image
@@ -37,7 +39,14 @@ export const ItemCard = ({ item }: { item: Item }) => (
           <span className="font-medium">${item.pricePerDay}</span>
           <span className="text-muted-foreground text-sm">Per Day</span>
         </div>
-        <ViewItemDialog item={item} />
+        {isOwner ? (
+          <div className="flex">
+            <DeleteItemDialog item={item} />
+            <EditItemDialog item={item} />
+          </div>
+        ) : (
+          <ViewItemDialog item={item} />
+        )}
       </div>
     </div>
   </div>
