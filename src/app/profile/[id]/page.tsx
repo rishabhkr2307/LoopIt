@@ -14,12 +14,12 @@ export default async function ProfilePage({ params }: { params: Promise<{ id: st
       <div className="flex flex-col gap-8 lg:flex-row">
         {/* Mobile View */}
         <div className="mb-4 lg:hidden">
-          <ProfileCard profile={profile} />
+          <ProfileCard profile={profile.profile} />
         </div>
 
         {/* Desktop View */}
         <div className="hidden w-64 shrink-0 lg:block">
-          <ProfileCard profile={profile} />
+          <ProfileCard profile={profile.profile} />
         </div>
 
         {/* Item Grid */}

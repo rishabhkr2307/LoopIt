@@ -3,9 +3,18 @@ import { items } from './items'
 import { profiles } from './profiles'
 export const requests = pgTable('requests', (t) => ({
   id: t.uuid('id').defaultRandom().primaryKey(),
-  itemId: t.uuid('item_id').references(() => items.id, { onDelete: 'cascade' }),
-  borrowerId: t.uuid('borrower_id').references(() => profiles.id, { onDelete: 'cascade' }),
-  duration: t.integer('duration').notNull(),
+  itemId: t
+    .uuid('item_id')
+    .references(() => items.id, { onDelete: 'cascade' })
+    .notNull(),
+  ownerId: t
+    .uuid('owner_id')
+    .references(() => profiles.id, { onDelete: 'cascade' })
+    .notNull(),
+  borrowerId: t
+    .uuid('borrower_id')
+    .references(() => profiles.id, { onDelete: 'cascade' })
+    .notNull(),
   createdAt: t.timestamp('created_at').notNull().defaultNow(),
   updatedAt: t
     .timestamp('updated_at')

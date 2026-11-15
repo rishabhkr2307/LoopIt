@@ -1,4 +1,5 @@
 'use client'
+import { createRentalRequest } from '@/app/actions/requests'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -11,8 +12,22 @@ import { itemCategories } from '@/constants'
 import { Item } from '@/db/schema/items'
 import { PlusIcon, StarIcon } from '@phosphor-icons/react'
 import Image from 'next/image'
+import { toast } from 'sonner'
 
 export function ViewItemDialog({ item }: { item: Item }) {
+  const handleRentalRequest = async () => {
+    try {
+      const { success, error } = await createRentalRequest(item.id)
+      if (!success) {
+        toast.error(error ?? 'Rental request failed')
+        return
+      }
+      toast.success('Rental request success')
+    } catch (error) {
+      console.error(error)
+      toast.error('Something went wrong')
+    }
+  }
   return (
     <Dialog>
       <DialogTrigger
@@ -70,7 +85,7 @@ export function ViewItemDialog({ item }: { item: Item }) {
         </div>
         <DialogFooter>
           <DialogClose render={<Button variant="outline">Cancel</Button>} />
-          <Button>Request Rental</Button>
+          <Button onClick={handleRentalRequest}>Request Rental</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

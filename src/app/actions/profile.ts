@@ -94,14 +94,27 @@ export async function getUserProfile(): Promise<{
 export async function getProfile(id: string): Promise<{
   success: boolean
   error?: string
-  data?: Profile
+  data?: {
+    profile: Profile
+    isOwner: boolean
+  }
 }> {
   try {
+    const { data: session } = await auth.getSession()
+    if (!session?.user) {
+      return { success: false, error: 'You should be logged in.' }
+    }
     const profile = await db.query.profiles.findFirst({
       where: { id },
     })
     if (!profile) return { success: false, error: 'Profile not found' }
-    return { success: true, data: profile }
+    return {
+      success: true,
+      data: {
+        profile,
+        isOwner: profile.userId == session.user.id,
+      },
+    }
   } catch (error) {
     console.error('Error at getProfile', error)
     return { success: false, error: 'Something went wrong' }
