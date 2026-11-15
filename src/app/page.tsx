@@ -9,7 +9,13 @@ type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>
 
 export default async function Home({ searchParams }: { searchParams: SearchParams }) {
   const { success, data: profile } = await getUserProfile()
-  const { category, cityId = profile?.cityId, orderByPrice, orderByTime } = await searchParams
+  const {
+    category,
+    cityId = profile?.cityId,
+    orderByPrice,
+    orderByTime,
+    searchQ = '',
+  } = await searchParams
   if (!success || !profile)
     return (
       <div>
@@ -27,6 +33,7 @@ export default async function Home({ searchParams }: { searchParams: SearchParam
       (typeof orderByTime == 'string' && orderByTime == 'asc') || orderByTime == 'desc'
         ? orderByTime
         : undefined,
+    searchQ: typeof searchQ == 'string' ? searchQ : undefined,
   })
   return <FilterPage items={data ?? []} profile={profile} />
 }

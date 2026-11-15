@@ -6,7 +6,7 @@ import { auth } from '@/lib/auth/server'
 import { files } from '@/lib/storage/upload'
 import { createItemSchema } from '@/schema/items'
 import { randomUUID } from 'crypto'
-import { and, eq } from 'drizzle-orm'
+import { and, asc, desc, eq, sql } from 'drizzle-orm'
 import { redirect } from 'next/navigation'
 
 export async function createItem(_prevState: { error: string } | null, formData: FormData) {
@@ -110,6 +110,7 @@ export async function getItemsWithFilters(filters: {
   cityId?: string
   orderByTime?: 'asc' | 'desc'
   orderByPrice?: 'asc' | 'desc'
+  searchQ?: string
 }): Promise<{
   success: boolean
   error?: string
@@ -129,18 +130,59 @@ export async function getItemsWithFilters(filters: {
     if (!profile) {
       return { success: false, error: 'You should have a profile first.' }
     }
-    const dbItems = await db.query.items.findMany({
-      where: {
-        ...(filters.cityId ? { cityId: filters.cityId } : {}),
-        ...(filters.category
-          ? { itemCategory: filters.category as (typeof itemCategory.enumValues)[number] }
-          : {}),
-      },
-      orderBy: {
-        ...(filters.orderByTime ? { createdAt: filters.orderByTime } : {}),
-        ...(filters.orderByPrice ? { pricePerDay: filters.orderByPrice } : {}),
-      },
-    })
+    const searchVector = sql`
+      (
+        setweight(
+          to_tsvector('english', ${items.name}),
+          'A'
+        )
+        ||
+        setweight(
+          to_tsvector(
+            'english',
+            coalesce(${items.description}, '')
+          ),
+          'B'
+        )
+      )
+    `
+
+    const conditions = [
+      filters.cityId ? eq(items.cityId, filters.cityId) : undefined,
+
+      filters.category
+        ? eq(items.itemCategory, filters.category as (typeof itemCategory.enumValues)[number])
+        : undefined,
+
+      filters.searchQ?.trim()
+        ? sql`${searchVector} @@ websearch_to_tsquery('english', ${filters.searchQ.trim()})`
+        : undefined,
+    ].filter(Boolean)
+
+    const orderBy = []
+
+    if (filters.searchQ?.trim()) {
+      const searchQuery = sql`
+        websearch_to_tsquery('english', ${filters.searchQ.trim()})
+      `
+
+      orderBy.push(desc(sql`ts_rank(${searchVector}, ${searchQuery})`))
+    }
+
+    if (filters.orderByTime) {
+      orderBy.push(filters.orderByTime === 'asc' ? asc(items.createdAt) : desc(items.createdAt))
+    }
+
+    if (filters.orderByPrice) {
+      orderBy.push(
+        filters.orderByPrice === 'asc' ? asc(items.pricePerDay) : desc(items.pricePerDay),
+      )
+    }
+    const dbItems = await db
+      .select()
+      .from(items)
+      .where(and(...conditions))
+      .orderBy(...orderBy)
 
     return { success: true, data: dbItems }
   } catch (error) {

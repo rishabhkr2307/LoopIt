@@ -6,8 +6,15 @@ import { Profile } from '@/db/schema/profiles'
 import { ButtonGroup } from './ui/button-group'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
+import { useQueryState } from 'nuqs'
 
 const Navbar = ({ profile }: { profile: Profile }) => {
+  const [searchQ, setSearchQ] = useQueryState('searchQ', {
+    shallow: false,
+  })
+  const handleClearSearch = () => {
+    setSearchQ(null)
+  }
   return (
     <section className="mb-4">
       <div className="container">
@@ -24,8 +31,15 @@ const Navbar = ({ profile }: { profile: Profile }) => {
           </div>
           <div className="flex gap-2">
             <ButtonGroup>
-              <Input id="input-button-group" placeholder="Search items..." />
-              <Button variant="outline">Search</Button>
+              <Input
+                id="input-button-group"
+                placeholder="Search items..."
+                value={searchQ ?? ''}
+                onChange={(e) => setSearchQ(e.target.value)}
+              />
+              <Button variant="outline" disabled={!searchQ} onClick={handleClearSearch}>
+                Clear
+              </Button>
             </ButtonGroup>
             <UserAvatar profile={profile} />
           </div>

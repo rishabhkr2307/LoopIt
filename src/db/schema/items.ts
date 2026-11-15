@@ -2,6 +2,7 @@ import { index, pgTable } from 'drizzle-orm/pg-core'
 import { profiles } from './profiles'
 import { itemCategory, itemStatus } from './enums'
 import { cities } from './cities'
+import { sql } from 'drizzle-orm'
 
 export const items = pgTable(
   'items',
@@ -26,7 +27,24 @@ export const items = pgTable(
       .notNull()
       .$onUpdate(() => new Date()),
   }),
-  (table) => [index('owner_id_idx').on(table.ownerId), index('city_id_idx').on(table.cityId)],
+  (table) => [
+    index('owner_id_idx').on(table.ownerId),
+    index('city_id_idx').on(table.cityId),
+    index('items_search_idx').using(
+      'gin',
+      sql`(
+        setweight(
+          to_tsvector('english', ${table.name}),
+          'A'
+        )
+        ||
+        setweight(
+          to_tsvector('english', coalesce(${table.description}, '')),
+          'B'
+        )
+      )`,
+    ),
+  ],
 )
 
 export type Item = typeof items.$inferSelect
