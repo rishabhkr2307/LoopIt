@@ -55,7 +55,7 @@ export async function createItem(_prevState: { error: string } | null, formData:
       pricePerWeek: data.pricePerWeek,
       pricePerMonth: data.pricePerMonth,
       cityId: profile.cityId,
-      ownerId: profile.id,
+      ownerId: profile.userId,
       imageUrl,
     })
   } catch (error) {
@@ -123,7 +123,7 @@ export async function editItem(_prevState: { error: string } | null, formData: F
         pricePerWeek: data.pricePerWeek,
         pricePerMonth: data.pricePerMonth,
         cityId: profile.cityId,
-        ownerId: profile.id,
+        ownerId: profile.userId,
         imageUrl,
       })
       .where(eq(items.id, data.item_id))
@@ -152,7 +152,7 @@ export async function deleteItemById(
   }
 
   try {
-    await db.delete(items).where(and(eq(items.id, itemId), eq(items.ownerId, profile.id)))
+    await db.delete(items).where(and(eq(items.id, itemId), eq(items.ownerId, profile.userId)))
     return { success: true }
   } catch (error) {
     console.error('Error at deleteItemById', error)

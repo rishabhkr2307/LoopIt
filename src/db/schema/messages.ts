@@ -9,7 +9,7 @@ export const messages = pgTable(
     conversationId: t
       .uuid('conversation_id')
       .references(() => conversations.id, { onDelete: 'cascade' }),
-    senderId: t.uuid('sender_id').references(() => profiles.id, { onDelete: 'cascade' }),
+    senderId: t.uuid('sender_id').references(() => profiles.userId, { onDelete: 'cascade' }),
     message: t.text('message').notNull(),
     createdAt: t.timestamp('created_at').notNull().defaultNow(),
     updatedAt: t

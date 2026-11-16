@@ -10,7 +10,7 @@ export const items = pgTable(
     id: t.uuid('id').defaultRandom().primaryKey(),
     ownerId: t
       .uuid('owner_id')
-      .references(() => profiles.id, { onDelete: 'cascade' })
+      .references(() => profiles.userId, { onDelete: 'cascade' })
       .notNull(),
     name: t.text('name').notNull(),
     description: t.text('description').notNull(),

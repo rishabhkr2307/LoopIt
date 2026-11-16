@@ -7,8 +7,8 @@ export const conversations = pgTable(
   (t) => ({
     id: t.uuid('id').defaultRandom().primaryKey(),
     itemId: t.uuid('item_id').references(() => items.id, { onDelete: 'cascade' }),
-    ownerId: t.uuid('owner_id').references(() => profiles.id, { onDelete: 'cascade' }),
-    borrowerId: t.uuid('borrower_id').references(() => profiles.id, { onDelete: 'cascade' }),
+    ownerId: t.uuid('owner_id').references(() => profiles.userId, { onDelete: 'cascade' }),
+    borrowerId: t.uuid('borrower_id').references(() => profiles.userId, { onDelete: 'cascade' }),
     createdAt: t.timestamp('created_at').notNull().defaultNow(),
     updatedAt: t
       .timestamp('updated_at')

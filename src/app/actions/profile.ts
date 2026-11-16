@@ -140,7 +140,7 @@ export async function getOwnerProfileWithItems(): Promise<{
     if (!profile) return { success: false, error: 'Profile not found' }
     const items = await db.query.items.findMany({
       where: {
-        ownerId: profile.id,
+        ownerId: profile.userId,
       },
     })
     return { success: true, data: { profile, items } }
@@ -168,7 +168,7 @@ export async function getUserProfileWithItems(profileId: string): Promise<{
     if (!profile) return { success: false, error: 'Profile not found' }
     const items = await db.query.items.findMany({
       where: {
-        ownerId: profile.id,
+        ownerId: profile.userId,
       },
     })
     return { success: true, data: { profile, items } }

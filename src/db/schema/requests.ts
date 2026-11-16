@@ -9,11 +9,11 @@ export const requests = pgTable('requests', (t) => ({
     .notNull(),
   ownerId: t
     .uuid('owner_id')
-    .references(() => profiles.id, { onDelete: 'cascade' })
+    .references(() => profiles.userId, { onDelete: 'cascade' })
     .notNull(),
   borrowerId: t
     .uuid('borrower_id')
-    .references(() => profiles.id, { onDelete: 'cascade' })
+    .references(() => profiles.userId, { onDelete: 'cascade' })
     .notNull(),
   createdAt: t.timestamp('created_at').notNull().defaultNow(),
   updatedAt: t
