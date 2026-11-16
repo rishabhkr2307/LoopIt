@@ -1,7 +1,7 @@
 import FilterPage from '@/components/filter-page'
-import { getItemsWithFilters } from './actions/items'
-import { getUserProfile } from './actions/profile'
 import { CreateProfileDialog } from '@/components/create-profile-dialog'
+import { getUserProfile } from '@/app/actions/profile'
+import { getItemsWithFilters } from '@/app/actions/items'
 
 export const dynamic = 'force-dynamic'
 
