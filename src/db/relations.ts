@@ -6,11 +6,93 @@ import { requests } from './schema/requests'
 import { conversations } from './schema/conversations'
 import { cities } from './schema/cities'
 
-export const relations = defineRelations({
-  profiles,
-  items,
-  messages,
-  requests,
-  conversations,
-  cities,
-})
+export const relations = defineRelations(
+  {
+    profiles,
+    items,
+    messages,
+    requests,
+    conversations,
+    cities,
+  },
+  (r) => ({
+    requests: {
+      item: r.one.items({
+        from: r.requests.itemId,
+        to: r.items.id,
+      }),
+      owner: r.one.profiles({
+        from: r.requests.ownerId,
+        to: r.profiles.id,
+      }),
+      borrower: r.one.profiles({
+        from: r.requests.borrowerId,
+        to: r.profiles.id,
+      }),
+    },
+    items: {
+      owner: r.one.profiles({
+        from: r.items.ownerId,
+        to: r.profiles.id,
+      }),
+      requests: r.many.requests({
+        from: r.items.id,
+        to: r.requests.itemId,
+      }),
+    },
+    profiles: {
+      city: r.one.cities({
+        from: r.profiles.cityId,
+        to: r.cities.id,
+      }),
+      items: r.many.items({
+        from: r.profiles.id,
+        to: r.items.ownerId,
+      }),
+      ownerRequests: r.many.requests({
+        from: r.profiles.id,
+        to: r.requests.ownerId,
+      }),
+      borrowerRequests: r.many.requests({
+        from: r.profiles.id,
+        to: r.requests.borrowerId,
+      }),
+      ownerConversations: r.many.conversations({
+        from: r.profiles.id,
+        to: r.conversations.ownerId,
+      }),
+      borrowerConversations: r.many.conversations({
+        from: r.profiles.id,
+        to: r.conversations.borrowerId,
+      }),
+    },
+    conversations: {
+      item: r.one.items({
+        from: r.conversations.itemId,
+        to: r.items.id,
+      }),
+      owner: r.one.profiles({
+        from: r.conversations.ownerId,
+        to: r.profiles.id,
+      }),
+      borrower: r.one.profiles({
+        from: r.conversations.borrowerId,
+        to: r.profiles.id,
+      }),
+      messages: r.many.messages({
+        from: r.conversations.id,
+        to: r.messages.conversationId,
+      }),
+    },
+    messages: {
+      conversation: r.one.conversations({
+        from: r.messages.conversationId,
+        to: r.conversations.id,
+      }),
+      sender: r.one.profiles({
+        from: r.messages.senderId,
+        to: r.profiles.id,
+      }),
+    },
+  }),
+)
