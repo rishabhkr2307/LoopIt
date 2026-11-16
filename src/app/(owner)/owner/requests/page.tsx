@@ -1,3 +1,4 @@
+import RequestList from '@/components/request-list'
 import { db } from '@/db'
 import { auth } from '@/lib/auth/server'
 import { notFound } from 'next/navigation'
@@ -16,12 +17,7 @@ export default async function OwnerRequestsPage() {
       <div className="flex flex-col gap-8 lg:flex-row">
         <div className="flex-1">
           <div className="text-muted-foreground mb-4 text-sm">{requests.length} items found</div>
-
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {requests.map((req) => (
-              <div key={req.id}> {req.item?.name}</div>
-            ))}
-          </div>
+          <RequestList requests={requests} />
         </div>
       </div>
     </div>

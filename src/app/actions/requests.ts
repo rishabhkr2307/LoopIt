@@ -1,6 +1,7 @@
 'use server'
 
 import { db } from '@/db'
+import { conversations } from '@/db/schema/conversations'
 import { requests } from '@/db/schema/requests'
 import { auth } from '@/lib/auth/server'
 import { eq } from 'drizzle-orm'
@@ -41,6 +42,57 @@ export async function createRentalRequest(
     return { success: true }
   } catch (error) {
     console.error('Error at requestRental', error)
+    return { success: false }
+  }
+}
+
+export async function approveRentalRequest(
+  requestId: string,
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    const { data: session } = await auth.getSession()
+    if (!session || !session.user) {
+      return { success: false, error: 'You should be logged in' }
+    }
+    const request = await db.query.requests.findFirst({
+      where: { id: requestId, ownerId: session.user.id },
+    })
+
+    if (!request) {
+      return { success: false, error: 'Request not found or you are not owner' }
+    }
+    await db.update(requests).set({ status: 'approved' }).where(eq(requests.id, requestId))
+    await db.insert(conversations).values({
+      ownerId: session.user.id,
+      itemId: request.itemId,
+      borrowerId: request.borrowerId,
+    })
+    return { success: true }
+  } catch (error) {
+    console.error('Error at approveRentalRequest', error)
+    return { success: false }
+  }
+}
+
+export async function rejectRentalRequest(
+  requestId: string,
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    const { data: session } = await auth.getSession()
+    if (!session || !session.user) {
+      return { success: false, error: 'You should be logged in' }
+    }
+    const request = await db.query.requests.findFirst({
+      where: { id: requestId, ownerId: session.user.id },
+    })
+
+    if (!request) {
+      return { success: false, error: 'Request not found or you are not owner' }
+    }
+    await db.update(requests).set({ status: 'rejected' }).where(eq(requests.id, requestId))
+    return { success: true }
+  } catch (error) {
+    console.error('Error at rejectRentalRequest', error)
     return { success: false }
   }
 }
