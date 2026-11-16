@@ -138,50 +138,14 @@ export async function deleteItemById(
   itemId: string,
 ): Promise<{ success: boolean; error?: string }> {
   const { data } = await auth.getSession()
-  if (!data?.user) {
+  if (!data || !data.user) {
     return { success: false, error: 'You should be logged in.' }
   }
-  const profile = await db.query.profiles.findFirst({
-    where: {
-      userId: data.user.id,
-    },
-  })
-
-  if (!profile) {
-    return { success: false, error: 'You should have a profile first.' }
-  }
-
   try {
-    await db.delete(items).where(and(eq(items.id, itemId), eq(items.ownerId, profile.userId)))
+    await db.delete(items).where(and(eq(items.id, itemId), eq(items.ownerId, data.user.id)))
     return { success: true }
   } catch (error) {
     console.error('Error at deleteItemById', error)
-    return { success: false, error: 'Something went wrong' }
-  }
-}
-
-export async function getItemById(itemId: string): Promise<{
-  success: boolean
-  error?: string
-  data?: Item
-}> {
-  try {
-    const { data: session } = await auth.getSession()
-    if (!session?.user) {
-      return { success: false, error: 'You should be logged in.' }
-    }
-    const item = await db.query.items.findFirst({
-      where: {
-        id: itemId,
-      },
-    })
-
-    if (!item) {
-      return { success: false, error: 'Item not found' }
-    }
-    return { success: true, data: item }
-  } catch (error) {
-    console.error('Error at getItemById', error)
     return { success: false, error: 'Something went wrong' }
   }
 }
@@ -268,32 +232,6 @@ export async function getItemsWithFilters(filters: {
     return { success: true, data: dbItems }
   } catch (error) {
     console.error('Error at getItemsWithFilters', error)
-    return { success: false, error: 'Something went wrong' }
-  }
-}
-
-export async function getItemsByProfile(profileId: string): Promise<{
-  success: boolean
-  error?: string
-  data?: Item[]
-}> {
-  try {
-    const { data: session } = await auth.getSession()
-    if (!session?.user) {
-      return { success: false, error: 'You should be logged in.' }
-    }
-    const items = await db.query.items.findMany({
-      where: {
-        ownerId: profileId,
-      },
-    })
-    if (!items) {
-      return { success: false, error: 'No item exist in city' }
-    }
-
-    return { success: true, data: items }
-  } catch (error) {
-    console.error('Error at getItemsByProfile', error)
     return { success: false, error: 'Something went wrong' }
   }
 }

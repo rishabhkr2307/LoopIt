@@ -1,14 +1,18 @@
 import FilterPage from '@/components/filter-page'
 import { CreateProfileDialog } from '@/components/create-profile-dialog'
-import { getUserProfile } from '@/app/actions/profile'
 import { getItemsWithFilters } from '@/app/actions/items'
+import { auth } from '@/lib/auth/server'
+import { db } from '@/db'
 
 export const dynamic = 'force-dynamic'
 
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>
 
 export default async function Home({ searchParams }: { searchParams: SearchParams }) {
-  const { success, data: profile } = await getUserProfile()
+  const { data: session } = await auth.getSession()
+  const profile = await db.query.profiles.findFirst({
+    where: { userId: session?.user.id },
+  })
   const {
     category,
     cityId = profile?.cityId,
@@ -16,10 +20,10 @@ export default async function Home({ searchParams }: { searchParams: SearchParam
     orderByTime,
     searchQ = '',
   } = await searchParams
-  if (!success || !profile)
+  if (!profile)
     return (
       <div>
-        <CreateProfileDialog open={!success} />
+        <CreateProfileDialog open={!profile} />
       </div>
     )
   const { data } = await getItemsWithFilters({
