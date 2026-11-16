@@ -3,6 +3,7 @@ import { pgEnum } from 'drizzle-orm/pg-core'
 export const priceType = pgEnum('price_type', ['hourly', 'daily', 'weekly', 'monthly'])
 
 export const itemStatus = pgEnum('item_status', ['available', 'unavailable', 'archived'])
+export const requestStatus = pgEnum('request_status', ['pending', 'approved', 'rejected'])
 
 export const itemCategory = pgEnum('item_category', [
   'electronics_gadgets',

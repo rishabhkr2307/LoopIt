@@ -1,6 +1,7 @@
 import { pgTable } from 'drizzle-orm/pg-core'
 import { items } from './items'
 import { profiles } from './profiles'
+import { requestStatus } from './enums'
 export const requests = pgTable('requests', (t) => ({
   id: t.uuid('id').defaultRandom().primaryKey(),
   itemId: t
@@ -20,6 +21,7 @@ export const requests = pgTable('requests', (t) => ({
     .timestamp('updated_at')
     .notNull()
     .$onUpdate(() => new Date()),
+  status: requestStatus('request_status').default('pending'),
 }))
 
 export type Request = typeof requests.$inferSelect

@@ -29,6 +29,10 @@ export const relations = defineRelations(
         from: r.requests.borrowerId,
         to: r.profiles.userId,
       }),
+      conversation: r.one.conversations({
+        from: r.requests.itemId,
+        to: r.conversations.itemId,
+      }),
     },
     items: {
       owner: r.one.profiles({
