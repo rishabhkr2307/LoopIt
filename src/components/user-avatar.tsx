@@ -5,22 +5,23 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
+  DropdownMenuPortal,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Button } from './ui/button'
 import { useRouter } from 'next/navigation'
 import { authClient } from '@/lib/auth/client'
 import { Profile } from '@/db/schema/profiles'
+import Link from 'next/link'
 
 export function UserAvatar({ profile }: { profile: Profile }) {
   const router = useRouter()
   const handleSignOut = async () => {
     await authClient.signOut()
     router.push('/sign-in')
-  }
-  const handleProfile = () => {
-    router.push('/owner/profile')
   }
   return (
     <DropdownMenu>
@@ -36,9 +37,34 @@ export function UserAvatar({ profile }: { profile: Profile }) {
       />
       <DropdownMenuContent className="w-40" align="start">
         <DropdownMenuGroup>
-          <DropdownMenuLabel>My Account</DropdownMenuLabel>
-          <DropdownMenuItem onClick={handleProfile}>Profile</DropdownMenuItem>
-          <DropdownMenuItem onClick={handleSignOut}>Sign Out</DropdownMenuItem>
+          <DropdownMenuSub>
+            <DropdownMenuSubTrigger>Owner</DropdownMenuSubTrigger>
+            <DropdownMenuPortal>
+              <DropdownMenuSubContent>
+                <DropdownMenuItem>
+                  <Link href="/owner/profile">Profile</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link href="/owner/requests">Requests</Link>
+                </DropdownMenuItem>
+              </DropdownMenuSubContent>
+            </DropdownMenuPortal>
+          </DropdownMenuSub>
+          <DropdownMenuSub>
+            <DropdownMenuSubTrigger>Borrower</DropdownMenuSubTrigger>
+            <DropdownMenuPortal>
+              <DropdownMenuSubContent>
+                <DropdownMenuItem>
+                  <Link href="/requests">Requests</Link>
+                </DropdownMenuItem>
+              </DropdownMenuSubContent>
+            </DropdownMenuPortal>
+          </DropdownMenuSub>
+        </DropdownMenuGroup>
+        <DropdownMenuGroup>
+          <DropdownMenuItem variant="destructive" onClick={handleSignOut}>
+            Sign Out
+          </DropdownMenuItem>
         </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>
