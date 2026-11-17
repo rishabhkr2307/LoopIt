@@ -14,10 +14,10 @@ import { TrashIcon } from '@phosphor-icons/react'
 import { Item } from '@/db/schema/items'
 import { deleteItemById } from '@/app/actions/items'
 import { toast } from 'sonner'
-import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 
 export function DeleteItemDialog({ item }: { item: Item }) {
-  const router = useRouter()
+  const [open, setOpen] = useState(false)
   const handleDelete = async () => {
     try {
       const { success, error } = await deleteItemById(item.id)
@@ -26,17 +26,18 @@ export function DeleteItemDialog({ item }: { item: Item }) {
         return
       }
       toast.success('Item delete success')
-      router.push('/owner/profile')
     } catch (error) {
       console.error(error)
       toast.error('Something went wrong')
+    } finally {
+      setOpen(false)
     }
   }
   return (
-    <Dialog>
+    <Dialog open={open}>
       <DialogTrigger
         render={
-          <Button variant="destructive" size="icon">
+          <Button variant="destructive" size="icon" onClick={() => setOpen(true)}>
             <TrashIcon />
           </Button>
         }
@@ -47,7 +48,13 @@ export function DeleteItemDialog({ item }: { item: Item }) {
           <DialogDescription>Are you sure you want to delete?</DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <DialogClose render={<Button variant="outline">Cancel</Button>} />
+          <DialogClose
+            render={
+              <Button variant="outline" onClick={() => setOpen(false)}>
+                Cancel
+              </Button>
+            }
+          />
           <Button variant="destructive" onClick={handleDelete}>
             Confirm
           </Button>

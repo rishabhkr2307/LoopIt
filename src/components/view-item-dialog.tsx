@@ -12,9 +12,11 @@ import { itemCategories } from '@/constants'
 import { Item } from '@/db/schema/items'
 import { PlusIcon, StarIcon } from '@phosphor-icons/react'
 import Image from 'next/image'
+import { useState } from 'react'
 import { toast } from 'sonner'
 
 export function ViewItemDialog({ item }: { item: Item }) {
+  const [open, setOpen] = useState(false)
   const handleRentalRequest = async () => {
     try {
       const { success, error } = await createRentalRequest(item.id)
@@ -26,13 +28,15 @@ export function ViewItemDialog({ item }: { item: Item }) {
     } catch (error) {
       console.error(error)
       toast.error('Something went wrong')
+    } finally {
+      setOpen(false)
     }
   }
   return (
-    <Dialog>
+    <Dialog open={open}>
       <DialogTrigger
         render={
-          <Button size="sm" className="h-8">
+          <Button size="sm" className="h-8" onClick={() => setOpen(true)}>
             <PlusIcon className="mr-2 h-4 w-4" />
             More
           </Button>
@@ -86,7 +90,13 @@ export function ViewItemDialog({ item }: { item: Item }) {
           </div>
         </div>
         <DialogFooter>
-          <DialogClose render={<Button variant="outline">Cancel</Button>} />
+          <DialogClose
+            render={
+              <Button variant="outline" onClick={() => setOpen(false)}>
+                Cancel
+              </Button>
+            }
+          />
           <Button onClick={handleRentalRequest}>Request Rental</Button>
         </DialogFooter>
       </DialogContent>
