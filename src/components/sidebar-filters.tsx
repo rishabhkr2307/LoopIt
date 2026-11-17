@@ -17,7 +17,7 @@ export function SidebarFilters() {
   const [orderByPrice, setOrderByPrice] = useQueryState('orderByPrice', {
     shallow: false,
   })
-  const [orderByTiming, setOrderByTiming] = useQueryState('orderByTiming', {
+  const [orderByTiming, setOrderByTiming] = useQueryState('orderByTime', {
     shallow: false,
   })
   const [popCityId, setPopCityId] = useQueryState('cityId', {

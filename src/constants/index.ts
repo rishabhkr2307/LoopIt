@@ -28,8 +28,8 @@ export const itemPricing = [
   { label: 'Highest First', value: 'desc' },
 ] as const
 export const itemTimings = [
-  { label: 'Newest First', value: 'asc' },
-  { label: 'Oldest First', value: 'desc' },
+  { label: 'Newest First', value: 'desc' },
+  { label: 'Oldest First', value: 'asc' },
 ] as const
 export const popularCities = [
   { label: 'Banglore', value: '8578b136-d0ad-4dcb-a279-d44761dc3560' },
