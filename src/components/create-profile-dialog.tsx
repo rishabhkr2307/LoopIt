@@ -42,7 +42,12 @@ export function CreateProfileDialog({ open }: { open: boolean }) {
             </Field>
             <Field>
               <Label htmlFor="bio">Bio</Label>
-              <Textarea id="bio" name="bio" placeholder="Your bio goes here" />
+              <Textarea
+                className="max-h-32 resize-none overflow-y-auto"
+                id="bio"
+                name="bio"
+                placeholder="Your bio goes here"
+              />
             </Field>
             <Field>
               <Label htmlFor="name">City</Label>

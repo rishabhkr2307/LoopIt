@@ -61,6 +61,7 @@ export function EditItemDialog({ item }: { item: Item }) {
             <Field>
               <Label htmlFor="description">Description</Label>
               <Textarea
+                className="max-h-32 resize-none overflow-y-auto"
                 id="description"
                 name="description"
                 required

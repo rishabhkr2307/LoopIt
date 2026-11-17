@@ -59,7 +59,12 @@ export function CreateItemDialog() {
             </Field>
             <Field>
               <Label htmlFor="description">Description</Label>
-              <Textarea id="description" name="description" required />
+              <Textarea
+                className="max-h-32 resize-none overflow-y-auto"
+                id="description"
+                name="description"
+                required
+              />
             </Field>
             <Field>
               <FieldLabel htmlFor="category">Category</FieldLabel>

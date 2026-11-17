@@ -65,8 +65,10 @@ export function ViewItemDialog({ item }: { item: Item }) {
                 <p className="text-muted-foreground text-xs">101 reviews</p>
               </div>
             </div>
-            <h3 className="font-medium mt-4">Description</h3>
-            <span className="text-muted-foreground text-sm">{item.description}</span>
+            <div className="max-h-48 overflow-y-auto">
+              <h3 className="font-medium mt-4">Description</h3>
+              <span className="text-muted-foreground text-sm ">{item.description}</span>
+            </div>
             <div className="mt-4 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <span className="font-medium">${item.pricePerDay}</span>
