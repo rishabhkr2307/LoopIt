@@ -93,22 +93,30 @@ function RequestList({
                           <p className="text-muted-foreground text-sm">Rental Request</p>
                         </div>
                         {isOwner ? (
-                          <div className="w-full grid grid-cols-2 mt-4">
-                            <Button
-                              disabled={req.status == 'rejected'}
-                              variant="destructive"
-                              onClick={async () => await handleReject(req.id)}
-                            >
-                              <XIcon />
-                              Reject
-                            </Button>
-                            <Button
-                              disabled={req.status == 'approved'}
-                              onClick={async () => await handleApprove(req.id)}
-                            >
-                              <CheckIcon />
-                              Approve
-                            </Button>
+                          <div className="w-full flex flex-col mt-4">
+                            {req.status == 'pending' && (
+                              <Button
+                                variant="destructive"
+                                onClick={async () => await handleReject(req.id)}
+                              >
+                                <XIcon />
+                                Reject
+                              </Button>
+                            )}
+                            {req.status == 'pending' && (
+                              <Button onClick={async () => await handleApprove(req.id)}>
+                                <CheckIcon />
+                                Approve
+                              </Button>
+                            )}
+                            {req.conversation && (
+                              <ChatUI
+                                conversationId={req.conversation?.id ?? ''}
+                                item={req.item!}
+                                messages={req.conversation?.messages ?? []}
+                                userId={userId}
+                              />
+                            )}
                           </div>
                         ) : (
                           <div className="w-full mt-4">

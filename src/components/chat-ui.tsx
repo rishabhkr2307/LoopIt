@@ -43,6 +43,7 @@ export function ChatUI({
     if (!msg.trim()) return
     try {
       const res = await createMessage(conversationId, msg.trim())
+      setMsg('')
       setMsgs((prev) => [...prev, res.data as Message])
     } catch (error) {
       console.error(error)
@@ -70,12 +71,18 @@ export function ChatUI({
           <DrawerTitle>Message</DrawerTitle>
           <DrawerDescription>You are messaging owner of {item.name}</DrawerDescription>
         </DrawerHeader>
-        <div className="flex w-full max-w-sm flex-col gap-8 px-4 py-12">
-          {msgs.map((message) => (
-            <Bubble key={message.id} align={message.senderId == userId ? 'end' : 'start'}>
-              <BubbleContent>{message.message}</BubbleContent>
-            </Bubble>
-          ))}
+        <div className="flex-1 overflow-y-auto">
+          <div className="flex w-full max-w-sm flex-col gap-4 px-4 py-12">
+            {msgs.map((message) => (
+              <Bubble
+                key={message.id}
+                variant={message.senderId == userId ? 'default' : 'muted'}
+                align={message.senderId == userId ? 'end' : 'start'}
+              >
+                <BubbleContent>{message.message}</BubbleContent>
+              </Bubble>
+            ))}
+          </div>
         </div>
         <DrawerFooter>
           <div className="flex gap-2">
@@ -86,6 +93,7 @@ export function ChatUI({
                 placeholder="Enter your message..."
                 required
                 onChange={(e) => setMsg(e.target.value)}
+                value={msg}
               />
             </Field>
             <Button size="icon" onClick={handleSend}>
