@@ -142,6 +142,10 @@ export async function deleteItemById(
     return { success: false, error: 'You should be logged in.' }
   }
   try {
+    const request = await db.query.requests.findFirst({ where: { itemId } })
+    if (request) {
+      return { success: false, error: 'Request found for the item. Delete the request first.' }
+    }
     await db.delete(items).where(and(eq(items.id, itemId), eq(items.ownerId, data.user.id)))
     return { success: true }
   } catch (error) {
