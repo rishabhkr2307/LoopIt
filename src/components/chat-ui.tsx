@@ -17,7 +17,7 @@ import { Message } from '@/db/schema/messages'
 import { Field } from './ui/field'
 import { Input } from './ui/input'
 import { Item } from '@/db/schema/items'
-import { PaperPlaneIcon } from '@phosphor-icons/react'
+import { PaperPlaneTiltIcon } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 import { createMessage } from '@/app/actions/message'
 
@@ -26,11 +26,13 @@ export function ChatUI({
   messages,
   userId,
   item,
+  disabled,
 }: {
   conversationId: string
   messages: Message[]
   userId: string
   item: Item
+  disabled?: boolean
 }) {
   const [open, setOpen] = React.useState(false)
   const [msgs, setMsgs] = React.useState<Message[]>(messages)
@@ -55,7 +57,14 @@ export function ChatUI({
       showSwipeHandle={isMobile}
       swipeDirection={isMobile ? 'down' : 'right'}
     >
-      <DrawerTrigger render={<Button>Chat</Button>} />
+      <DrawerTrigger
+        render={
+          <Button disabled={disabled} className="w-full">
+            <PaperPlaneTiltIcon />
+            Message
+          </Button>
+        }
+      />
       <DrawerContent>
         <DrawerHeader>
           <DrawerTitle>Message</DrawerTitle>
@@ -80,7 +89,7 @@ export function ChatUI({
               />
             </Field>
             <Button size="icon" onClick={handleSend}>
-              <PaperPlaneIcon />
+              <PaperPlaneTiltIcon />
             </Button>
           </div>
         </DrawerFooter>

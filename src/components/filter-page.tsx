@@ -8,7 +8,7 @@ import { Profile } from '@/db/schema/profiles'
 export default function FilterPage({ items, profile }: { items: Item[]; profile: Profile }) {
   return (
     <div className="mx-auto w-full max-w-7xl p-4 md:p-6">
-      <Navbar profile={profile} />
+      <Navbar profile={profile} isHome />
       <div className="flex flex-col gap-8 lg:flex-row">
         {/* Sidebar Filters */}
         <SidebarFilters />

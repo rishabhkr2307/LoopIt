@@ -105,18 +105,12 @@ export async function deleteRentalRequest(
     if (!session || !session.user) {
       return { success: false, error: 'You should be logged in' }
     }
-    const profile = await db.query.profiles.findFirst({
-      where: { userId: session.user.id },
+
+    const request = await db.query.requests.findFirst({
+      where: { borrowerId: session.user.id },
     })
-    if (!profile) {
-      return { success: false, error: 'Profile not found' }
-    }
-    const request = await db.query.requests.findFirst({ where: { id: requestId } })
     if (!request) {
-      return { success: false, error: 'Request not found' }
-    }
-    if (request.ownerId != profile.userId) {
-      return { success: false, error: 'You are not the owner' }
+      return { success: false, error: 'Request not found or You are not the borrower' }
     }
     await db.delete(requests).where(eq(requests.id, requestId))
     return { success: true }
