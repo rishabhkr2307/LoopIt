@@ -14,7 +14,7 @@ function ProfileCard({
   city,
 }: {
   profile: Profile
-  isOwner: boolean
+  isOwner?: boolean
   city: City
 }) {
   return (
