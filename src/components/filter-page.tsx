@@ -35,15 +35,9 @@ export default function FilterPage({
                 key={item.id}
                 item={item}
                 avgRating={
-                  reviewInfo.length > 0
-                    ? reviewInfo.filter((r) => r.itemId === item.id)[0].avgRating
-                    : '0'
+                  reviewInfo.find((r) => r.itemId == item.id)?.avgRating?.slice(0, 4) ?? '0'
                 }
-                totalReviews={
-                  reviewInfo.length > 0
-                    ? reviewInfo.filter((r) => r.itemId === item.id)[0].totalReviews
-                    : 0
-                }
+                totalReviews={reviewInfo.find((r) => r.itemId == item.id)?.totalReviews ?? 0}
               />
             ))}
           </div>

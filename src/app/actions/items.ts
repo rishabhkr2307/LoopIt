@@ -7,7 +7,7 @@ import { auth } from '@/lib/auth/server'
 import { files } from '@/lib/storage/upload'
 import { createItemSchema, editItemSchema } from '@/schema/items'
 import { randomUUID } from 'crypto'
-import { and, asc, avg, count, desc, eq, sql } from 'drizzle-orm'
+import { and, asc, avg, count, desc, eq, gte, inArray, sql } from 'drizzle-orm'
 import { redirect } from 'next/navigation'
 
 export async function createItem(_prevState: { error: string } | null, formData: FormData) {
@@ -68,7 +68,6 @@ export async function createItem(_prevState: { error: string } | null, formData:
 }
 
 export async function editItem(_prevState: { error: string } | null, formData: FormData) {
-  console.log(formData)
   const { success, data, error } = editItemSchema.safeParse({
     item_id: formData.get('item_id'),
     name: formData.get('name'),
@@ -161,6 +160,7 @@ export async function getItemsWithFilters(filters: {
   orderByTime?: 'asc' | 'desc'
   orderByPrice?: 'asc' | 'desc'
   searchQ?: string
+  aboveRating?: '1' | '2' | '3' | '4'
 }): Promise<{
   success: boolean
   error?: string
@@ -204,12 +204,20 @@ export async function getItemsWithFilters(filters: {
       )
     `
 
+    const ratingsSubQuery = db
+      .select({ itemId: reviews.itemId })
+      .from(reviews)
+      .groupBy(reviews.itemId)
+      .having(gte(avg(reviews.rating), Number(filters.aboveRating)))
+
     const conditions = [
       filters.cityId ? eq(items.cityId, filters.cityId) : undefined,
 
       filters.category
         ? eq(items.itemCategory, filters.category as (typeof itemCategory.enumValues)[number])
         : undefined,
+
+      filters.aboveRating ? inArray(items.id, ratingsSubQuery) : undefined,
 
       filters.searchQ?.trim()
         ? sql`${searchVector} @@ websearch_to_tsquery('english', ${filters.searchQ.trim()})`

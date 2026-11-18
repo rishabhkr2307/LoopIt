@@ -23,7 +23,11 @@ export function SidebarFilters() {
   const [popCityId, setPopCityId] = useQueryState('cityId', {
     shallow: false,
   })
-  const activeFilters = category || orderByPrice || orderByTiming || popCityId ? 1 : 0
+  const [aboveRating, setAboveRating] = useQueryState('aboveRating', {
+    shallow: false,
+  })
+  const activeFilters =
+    category || orderByPrice || orderByTiming || popCityId || aboveRating ? 1 : 0
 
   const toggleCategory = (category: string) => {
     setCategory((prev) => (prev == category ? null : category))
@@ -38,11 +42,16 @@ export function SidebarFilters() {
     setPopCityId((prev) => (prev == cityId ? null : cityId))
   }
 
+  const toggleAboveRating = (rating: string) => {
+    setAboveRating((prev) => (prev == rating ? null : rating))
+  }
+
   const clearFilters = () => {
     setCategory(null)
     setOrderByPrice(null)
     setOrderByTiming(null)
     setPopCityId(null)
+    setAboveRating(null)
   }
 
   const ratings = [4, 3, 2, 1]
@@ -194,7 +203,11 @@ export function SidebarFilters() {
           <div className="space-y-2">
             {ratings.map((rating) => (
               <div key={rating} className="flex items-center space-x-2">
-                <Checkbox id={`rating-${rating}`} />
+                <Checkbox
+                  id={`rating-${rating}`}
+                  checked={aboveRating == rating.toString()}
+                  onCheckedChange={() => toggleAboveRating(rating.toString())}
+                />
                 <label
                   htmlFor={`rating-${rating}`}
                   className="flex items-center text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
