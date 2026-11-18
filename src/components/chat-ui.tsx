@@ -20,27 +20,30 @@ import { Item } from '@/db/schema/items'
 import { PaperPlaneTiltIcon } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 import { createMessage } from '@/app/actions/message'
+import { Dispatch, SetStateAction } from 'react'
 
 export function ChatUI({
+  open,
+  setOpen,
   conversationId,
   messages,
   userId,
   item,
-  disabled,
 }: {
-  conversationId: string
+  open: boolean
+  setOpen: Dispatch<SetStateAction<boolean>>
+  conversationId?: string
   messages: Message[]
   userId: string
   item: Item
   disabled?: boolean
 }) {
-  const [open, setOpen] = React.useState(false)
   const [msgs, setMsgs] = React.useState<Message[]>(messages)
   const [msg, setMsg] = React.useState('')
   const isMobile = useIsMobile()
 
   const handleSend = async () => {
-    if (!msg.trim()) return
+    if (!msg.trim() || !conversationId) return
     try {
       const res = await createMessage(conversationId, msg.trim())
       setMsg('')
@@ -58,14 +61,7 @@ export function ChatUI({
       showSwipeHandle={isMobile}
       swipeDirection={isMobile ? 'down' : 'right'}
     >
-      <DrawerTrigger
-        render={
-          <Button disabled={disabled} className="w-full">
-            <PaperPlaneTiltIcon />
-            Message
-          </Button>
-        }
-      />
+      <DrawerTrigger hidden />
       <DrawerContent>
         <DrawerHeader>
           <DrawerTitle>Message</DrawerTitle>
