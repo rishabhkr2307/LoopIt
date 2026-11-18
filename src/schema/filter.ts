@@ -1,5 +1,11 @@
 import * as z from 'zod'
-import { aboveRatingEnum, categoryEnum, orderByPriceEnum, orderByTimeEnum } from './enums'
+import {
+  aboveRatingEnum,
+  categoryEnum,
+  orderByPriceEnum,
+  orderByTimeEnum,
+  statusEnum,
+} from './enums'
 
 export const filterSchema = z.object({
   category: categoryEnum.optional().catch(undefined),
@@ -8,4 +14,8 @@ export const filterSchema = z.object({
   orderByTime: orderByTimeEnum.optional().catch(undefined),
   searchQ: z.string().optional().catch(undefined),
   aboveRating: aboveRatingEnum.optional().catch(undefined),
+})
+
+export const profileFilterSchema = z.object({
+  itemStatus: statusEnum.optional().catch(undefined),
 })

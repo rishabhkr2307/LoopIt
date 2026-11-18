@@ -15,18 +15,12 @@ import { Dispatch, ReactNode, SetStateAction } from 'react'
 export function ConfirmDialog({
   open,
   setOpen,
-  variant,
-  size,
-  icon,
-  btnText,
   title,
   subtitle,
   handler,
 }: {
   open: boolean
   setOpen: Dispatch<SetStateAction<boolean>>
-  variant?: 'link' | 'default' | 'outline' | 'secondary' | 'ghost' | 'destructive'
-  size?: 'default' | 'xs' | 'sm' | 'lg' | 'icon' | 'icon-xs' | 'icon-sm' | 'icon-lg'
   icon?: ReactNode
   btnText?: string
   title: string
@@ -35,13 +29,7 @@ export function ConfirmDialog({
 }) {
   return (
     <Dialog open={open}>
-      <DialogTrigger
-        render={
-          <Button variant={variant} size={size} onClick={() => setOpen(true)}>
-            {icon} {btnText}
-          </Button>
-        }
-      />
+      <DialogTrigger hidden />
       <DialogContent className="sm:max-w-sm">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>

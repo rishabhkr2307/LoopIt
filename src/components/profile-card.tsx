@@ -6,6 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import { Card, CardContent } from './ui/card'
 import { Profile } from '@/db/schema/profiles'
 import { MapPinIcon } from '@phosphor-icons/react'
+import { ButtonGroup } from './ui/button-group'
 
 function ProfileCard({
   profile,
@@ -36,10 +37,10 @@ function ProfileCard({
               </span>
             </div>
             {isOwner && (
-              <div className="flex flex-col justify-between text-sm text-center">
+              <ButtonGroup>
                 <CreateItemDialog />
                 <EditProfileDialog profile={profile} city={city} />
-              </div>
+              </ButtonGroup>
             )}
           </div>
         </CardContent>

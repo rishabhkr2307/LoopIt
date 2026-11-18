@@ -142,14 +142,43 @@ export async function deleteItemById(
     return { success: false, error: 'You should be logged in.' }
   }
   try {
-    const request = await db.query.requests.findFirst({ where: { itemId } })
+    const request = await db.query.requests.findFirst({ where: { itemId, status: 'approved' } })
     if (request) {
-      return { success: false, error: 'Request found for the item. Delete the request first.' }
+      return {
+        success: false,
+        error: 'Approved Request found for the item. Reject the request first.',
+      }
     }
     await db.delete(items).where(and(eq(items.id, itemId), eq(items.ownerId, data.user.id)))
     return { success: true }
   } catch (error) {
     console.error('Error at deleteItemById', error)
+    return { success: false, error: 'Something went wrong' }
+  }
+}
+
+export async function archiveItemById(
+  itemId: string,
+): Promise<{ success: boolean; error?: string }> {
+  const { data } = await auth.getSession()
+  if (!data || !data.user) {
+    return { success: false, error: 'You should be logged in.' }
+  }
+  try {
+    const request = await db.query.requests.findFirst({ where: { itemId, status: 'approved' } })
+    if (request) {
+      return {
+        success: false,
+        error: 'Approved Request found for the item. Reject the request first.',
+      }
+    }
+    await db
+      .update(items)
+      .set({ itemStatus: 'archived' })
+      .where(and(eq(items.id, itemId), eq(items.ownerId, data.user.id)))
+    return { success: true }
+  } catch (error) {
+    console.error('Error at archiveItemById', error)
     return { success: false, error: 'Something went wrong' }
   }
 }

@@ -16,6 +16,7 @@ import { useRouter } from 'next/navigation'
 import { authClient } from '@/lib/auth/client'
 import { Profile } from '@/db/schema/profiles'
 import Link from 'next/link'
+import { CrownIcon, HandshakeIcon, SignOutIcon } from '@phosphor-icons/react'
 
 export function UserAvatar({ profile }: { profile: Profile }) {
   const router = useRouter()
@@ -38,7 +39,10 @@ export function UserAvatar({ profile }: { profile: Profile }) {
       <DropdownMenuContent className="w-40" align="start">
         <DropdownMenuGroup>
           <DropdownMenuSub>
-            <DropdownMenuSubTrigger>Owner</DropdownMenuSubTrigger>
+            <DropdownMenuSubTrigger>
+              <CrownIcon />
+              Owner
+            </DropdownMenuSubTrigger>
             <DropdownMenuPortal>
               <DropdownMenuSubContent>
                 <DropdownMenuItem>
@@ -51,7 +55,10 @@ export function UserAvatar({ profile }: { profile: Profile }) {
             </DropdownMenuPortal>
           </DropdownMenuSub>
           <DropdownMenuSub>
-            <DropdownMenuSubTrigger>Borrower</DropdownMenuSubTrigger>
+            <DropdownMenuSubTrigger>
+              <HandshakeIcon />
+              Borrower
+            </DropdownMenuSubTrigger>
             <DropdownMenuPortal>
               <DropdownMenuSubContent>
                 <DropdownMenuItem>
@@ -63,6 +70,7 @@ export function UserAvatar({ profile }: { profile: Profile }) {
         </DropdownMenuGroup>
         <DropdownMenuGroup>
           <DropdownMenuItem variant="destructive" onClick={handleSignOut}>
+            <SignOutIcon />
             Sign Out
           </DropdownMenuItem>
         </DropdownMenuGroup>

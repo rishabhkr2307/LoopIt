@@ -37,9 +37,9 @@ export function EditItemDialog({ item }: { item: Item }) {
     <Dialog>
       <DialogTrigger
         render={
-          <Button variant="outline" className="flex justify-center items-center">
+          <Button variant="outline">
             <PencilIcon />
-            <span>Edit</span>
+            Edit Item
           </Button>
         }
       />

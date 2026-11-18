@@ -18,13 +18,21 @@ import { useActionState } from 'react'
 import { editProfile } from '@/app/actions/profile'
 import { Profile } from '@/db/schema/profiles'
 import { City } from '@/db/schema/cities'
+import { PencilIcon } from '@phosphor-icons/react'
 
 export function EditProfileDialog({ profile, city }: { profile: Profile; city: City }) {
   const [state, formAction, isPending] = useActionState(editProfile, null)
 
   return (
     <Dialog>
-      <DialogTrigger render={<Button variant="outline">Edit Profile</Button>} />
+      <DialogTrigger
+        render={
+          <Button variant="outline">
+            <PencilIcon />
+            Edit Profile
+          </Button>
+        }
+      />
       <DialogContent className="sm:max-w-sm">
         <form action={formAction}>
           <DialogHeader>

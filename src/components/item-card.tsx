@@ -1,5 +1,5 @@
 'use client'
-import { StarIcon, TrashIcon } from '@phosphor-icons/react'
+import { ArchiveIcon, StarIcon, TrashIcon } from '@phosphor-icons/react'
 import Image from 'next/image'
 import { Item } from '@/db/schema/items'
 import { ViewItemDialog } from './view-item-dialog'
@@ -7,8 +7,18 @@ import { itemCategories } from '@/constants'
 import { EditItemDialog } from './edit-item-dialog'
 import { ConfirmDialog } from './confirm-dialog'
 import { useState } from 'react'
-import { deleteItemById } from '@/app/actions/items'
+import { archiveItemById, deleteItemById } from '@/app/actions/items'
 import { toast } from 'sonner'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from './ui/dropdown-menu'
+import { Button } from './ui/button'
+import { DotsThreeIcon } from '@phosphor-icons/react/dist/ssr'
+import { ButtonGroup } from './ui/button-group'
 
 export const ItemCard = ({
   item,
@@ -21,7 +31,8 @@ export const ItemCard = ({
   avgRating: string | null
   totalReviews: number
 }) => {
-  const [open, setOpen] = useState(false)
+  const [deleteOpen, setDeleteOpen] = useState(false)
+  const [archiveOpen, setArchiveOpen] = useState(false)
   const handleDelete = async () => {
     try {
       const { success, error } = await deleteItemById(item.id)
@@ -34,7 +45,22 @@ export const ItemCard = ({
       console.error(error)
       toast.error('Something went wrong')
     } finally {
-      setOpen(false)
+      setDeleteOpen(false)
+    }
+  }
+  const handleArchive = async () => {
+    try {
+      const { success, error } = await archiveItemById(item.id)
+      if (!success) {
+        toast.error(error)
+        return
+      }
+      toast.success('Item archive success')
+    } catch (error) {
+      console.error(error)
+      toast.error('Something went wrong')
+    } finally {
+      setArchiveOpen(false)
     }
   }
   return (
@@ -72,17 +98,45 @@ export const ItemCard = ({
           </div>
           {isOwner ? (
             <div className="flex">
-              <ConfirmDialog
-                size="icon"
-                variant="destructive"
-                icon={<TrashIcon />}
-                open={open}
-                setOpen={setOpen}
-                title={`Delete ${item.name}`}
-                subtitle="Are you sure you want to delete"
-                handler={handleDelete}
-              />
-              <EditItemDialog item={item} />
+              <ButtonGroup>
+                <EditItemDialog item={item} />
+                <DropdownMenu>
+                  <DropdownMenuTrigger
+                    render={
+                      <Button variant="outline" size="icon" aria-label="More Options">
+                        <DotsThreeIcon />
+                      </Button>
+                    }
+                  />
+                  <DropdownMenuContent align="end" className="w-40">
+                    <DropdownMenuGroup>
+                      <DropdownMenuItem
+                        className="text-destructive"
+                        onClick={() => setDeleteOpen(true)}
+                      >
+                        <TrashIcon /> Delete Item
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => setArchiveOpen(true)}>
+                        <ArchiveIcon /> Archive Item
+                      </DropdownMenuItem>
+                    </DropdownMenuGroup>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+                <ConfirmDialog
+                  open={deleteOpen}
+                  setOpen={setDeleteOpen}
+                  title={`Delete ${item.name}`}
+                  subtitle="Are you sure you want to delete"
+                  handler={handleDelete}
+                />
+                <ConfirmDialog
+                  open={archiveOpen}
+                  setOpen={setArchiveOpen}
+                  title={`Archive ${item.name}`}
+                  subtitle="Are you sure you want to archive"
+                  handler={handleArchive}
+                />
+              </ButtonGroup>
             </div>
           ) : (
             <ViewItemDialog item={item} avgRating={avgRating} totalReviews={totalReviews} />
