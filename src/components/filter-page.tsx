@@ -5,7 +5,19 @@ import { Item } from '@/db/schema/items'
 import { Navbar } from './navbar'
 import { Profile } from '@/db/schema/profiles'
 
-export default function FilterPage({ items, profile }: { items: Item[]; profile: Profile }) {
+export default function FilterPage({
+  items,
+  profile,
+  reviewInfo,
+}: {
+  items: Item[]
+  profile: Profile
+  reviewInfo: {
+    itemId: string
+    avgRating: string | null
+    totalReviews: number
+  }[]
+}) {
   return (
     <div className="mx-auto w-full max-w-7xl p-4 md:p-6">
       <Navbar profile={profile} isHome />
@@ -19,7 +31,20 @@ export default function FilterPage({ items, profile }: { items: Item[]; profile:
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {items.map((item) => (
-              <ItemCard key={item.id} item={item} />
+              <ItemCard
+                key={item.id}
+                item={item}
+                avgRating={
+                  reviewInfo.length > 0
+                    ? reviewInfo.filter((r) => r.itemId === item.id)[0].avgRating
+                    : '0'
+                }
+                totalReviews={
+                  reviewInfo.length > 0
+                    ? reviewInfo.filter((r) => r.itemId === item.id)[0].totalReviews
+                    : 0
+                }
+              />
             ))}
           </div>
 

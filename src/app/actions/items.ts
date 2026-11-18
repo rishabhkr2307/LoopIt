@@ -2,11 +2,12 @@
 import { db } from '@/db'
 import { itemCategory } from '@/db/schema/enums'
 import { Item, items } from '@/db/schema/items'
+import { reviews } from '@/db/schema/reviews'
 import { auth } from '@/lib/auth/server'
 import { files } from '@/lib/storage/upload'
 import { createItemSchema, editItemSchema } from '@/schema/items'
 import { randomUUID } from 'crypto'
-import { and, asc, desc, eq, sql } from 'drizzle-orm'
+import { and, asc, avg, count, desc, eq, sql } from 'drizzle-orm'
 import { redirect } from 'next/navigation'
 
 export async function createItem(_prevState: { error: string } | null, formData: FormData) {
@@ -163,7 +164,14 @@ export async function getItemsWithFilters(filters: {
 }): Promise<{
   success: boolean
   error?: string
-  data?: Item[]
+  data?: {
+    items: Item[]
+    reviewInfo: {
+      itemId: string
+      avgRating: string | null
+      totalReviews: number
+    }[]
+  }
 }> {
   try {
     const { data: session } = await auth.getSession()
@@ -233,7 +241,15 @@ export async function getItemsWithFilters(filters: {
       .where(and(...conditions))
       .orderBy(...orderBy)
 
-    return { success: true, data: dbItems }
+    const reviewInfo = await db
+      .select({
+        itemId: reviews.itemId,
+        avgRating: avg(reviews.rating),
+        totalReviews: count(reviews.id),
+      })
+      .from(reviews)
+      .groupBy(reviews.itemId)
+    return { success: true, data: { items: dbItems, reviewInfo } }
   } catch (error) {
     console.error('Error at getItemsWithFilters', error)
     return { success: false, error: 'Something went wrong' }

@@ -6,7 +6,11 @@ export default async function ProfilePage({ params }: { params: Promise<{ id: st
   const { id } = await params
   const profile = await db.query.profiles.findFirst({
     where: { id },
-    with: { items: true },
+    with: {
+      items: {
+        with: { reviews: true },
+      },
+    },
   })
   if (!profile) {
     return notFound()
@@ -17,7 +21,16 @@ export default async function ProfilePage({ params }: { params: Promise<{ id: st
 
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {profile.items.map((item) => (
-          <ItemCard key={item.id} item={item} />
+          <ItemCard
+            key={item.id}
+            item={item}
+            avgRating={
+              item.reviews.length > 0
+                ? item.reviews.reduce((sum, r) => (sum += r.rating), 0).toString()
+                : '0'
+            }
+            totalReviews={item.reviews.length}
+          />
         ))}
       </div>
 

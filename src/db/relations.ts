@@ -5,6 +5,7 @@ import { messages } from './schema/messages'
 import { requests } from './schema/requests'
 import { conversations } from './schema/conversations'
 import { cities } from './schema/cities'
+import { reviews } from './schema/reviews'
 
 export const relations = defineRelations(
   {
@@ -14,6 +15,7 @@ export const relations = defineRelations(
     requests,
     conversations,
     cities,
+    reviews,
   },
   (r) => ({
     requests: {
@@ -42,6 +44,10 @@ export const relations = defineRelations(
       requests: r.many.requests({
         from: r.items.id,
         to: r.requests.itemId,
+      }),
+      reviews: r.many.reviews({
+        from: r.items.id,
+        to: r.reviews.itemId,
       }),
     },
     profiles: {
@@ -96,6 +102,12 @@ export const relations = defineRelations(
       sender: r.one.profiles({
         from: r.messages.senderId,
         to: r.profiles.userId,
+      }),
+    },
+    reviews: {
+      item: r.one.items({
+        from: r.reviews.itemId,
+        to: r.items.id,
       }),
     },
   }),

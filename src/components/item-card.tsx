@@ -10,7 +10,17 @@ import { useState } from 'react'
 import { deleteItemById } from '@/app/actions/items'
 import { toast } from 'sonner'
 
-export const ItemCard = ({ item, isOwner }: { item: Item; isOwner?: boolean }) => {
+export const ItemCard = ({
+  item,
+  isOwner,
+  avgRating,
+  totalReviews,
+}: {
+  item: Item
+  isOwner?: boolean
+  avgRating: string | null
+  totalReviews: number
+}) => {
   const [open, setOpen] = useState(false)
   const handleDelete = async () => {
     try {
@@ -41,19 +51,20 @@ export const ItemCard = ({ item, isOwner }: { item: Item; isOwner?: boolean }) =
       <div className="p-4">
         <div className="flex justify-between">
           <div>
-            <h3 className="font-medium">{item.name}</h3>
+            <h3 className="font-medium max-w-32">{item.name}</h3>
             <p className="text-muted-foreground text-sm">
               {itemCategories.filter((i) => i.value == item.itemCategory)[0].label}
             </p>
           </div>
-          <div className="text-right">
+          <div className="flex flex-col items-end">
             <div className="flex items-center gap-1">
               <StarIcon className="fill-primary text-primary h-4 w-4" />
-              <span className="text-sm font-medium">4.8</span>
+              <span className="text-sm font-medium">{avgRating ?? '0'}</span>
             </div>
-            <p className="text-muted-foreground text-xs">101 reviews</p>
+            <p className="text-muted-foreground text-xs">{totalReviews} reviews</p>
           </div>
         </div>
+
         <div className="mt-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="font-medium">${item.pricePerDay}</span>
@@ -74,7 +85,7 @@ export const ItemCard = ({ item, isOwner }: { item: Item; isOwner?: boolean }) =
               <EditItemDialog item={item} />
             </div>
           ) : (
-            <ViewItemDialog item={item} />
+            <ViewItemDialog item={item} avgRating={avgRating} totalReviews={totalReviews} />
           )}
         </div>
       </div>

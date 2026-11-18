@@ -15,7 +15,15 @@ import Image from 'next/image'
 import { useState } from 'react'
 import { toast } from 'sonner'
 
-export function ViewItemDialog({ item }: { item: Item }) {
+export function ViewItemDialog({
+  item,
+  avgRating,
+  totalReviews,
+}: {
+  item: Item
+  avgRating: string | null
+  totalReviews: number
+}) {
   const [open, setOpen] = useState(false)
   const handleRentalRequest = async () => {
     try {
@@ -64,9 +72,9 @@ export function ViewItemDialog({ item }: { item: Item }) {
               <div className="text-right">
                 <div className="flex items-center gap-1">
                   <StarIcon className="fill-primary text-primary h-4 w-4" />
-                  <span className="text-sm font-medium">4.8</span>
+                  <span className="text-sm font-medium">{avgRating}</span>
                 </div>
-                <p className="text-muted-foreground text-xs">101 reviews</p>
+                <p className="text-muted-foreground text-xs">{totalReviews} reviews</p>
               </div>
             </div>
             <div className="max-h-48 overflow-y-auto">

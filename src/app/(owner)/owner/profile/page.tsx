@@ -9,7 +9,11 @@ export default async function OwnerProfilePage() {
   const { data: session } = await auth.getSession()
   const profile = await db.query.profiles.findFirst({
     where: { userId: session?.user.id },
-    with: { items: true },
+    with: {
+      items: {
+        with: { reviews: true },
+      },
+    },
   })
   if (!profile) {
     return notFound()
@@ -20,7 +24,17 @@ export default async function OwnerProfilePage() {
 
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {profile.items.map((item) => (
-          <ItemCard key={item.id} item={item} isOwner />
+          <ItemCard
+            key={item.id}
+            item={item}
+            isOwner
+            avgRating={
+              item.reviews.length > 0
+                ? item.reviews.reduce((sum, r) => (sum += r.rating), 0).toString()
+                : '0'
+            }
+            totalReviews={item.reviews.length}
+          />
         ))}
       </div>
 

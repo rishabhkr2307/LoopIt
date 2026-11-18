@@ -39,5 +39,7 @@ export default async function Home({ searchParams }: { searchParams: SearchParam
         : undefined,
     searchQ: typeof searchQ == 'string' ? searchQ : undefined,
   })
-  return <FilterPage items={data ?? []} profile={profile} />
+  return (
+    <FilterPage items={data?.items ?? []} profile={profile} reviewInfo={data?.reviewInfo ?? []} />
+  )
 }
