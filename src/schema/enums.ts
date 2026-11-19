@@ -19,7 +19,7 @@ export const categoryEnum = z.enum([
   'entertainment_recreation',
 ])
 
-export const statusEnum = z.enum(['available', 'unavailable', 'archived'])
+export const statusEnum = z.enum(['available', 'rented', 'archived'])
 export const requestStatusEnum = z.enum(['pending', 'approved', 'rejected', 'completed'])
 
 export const orderByPriceEnum = z.enum(['asc', 'desc'])

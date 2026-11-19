@@ -1,6 +1,6 @@
 'use client'
 import { ButtonGroup } from './ui/button-group'
-import { ArchiveIcon, CheckIcon, FunnelXIcon } from '@phosphor-icons/react'
+import { ArchiveIcon, CheckIcon, FunnelXIcon, ProhibitIcon } from '@phosphor-icons/react'
 import { Button } from './ui/button'
 import { useQueryState } from 'nuqs'
 import { cn } from 'cn'
@@ -22,11 +22,19 @@ function ProfileFilter() {
         </Button>
         <Button
           variant="outline"
+          className={cn(itemStatus == 'rented' && 'bg-accent text-accent-foreground')}
+          onClick={() => setItemStatus('rented')}
+        >
+          <ProhibitIcon />
+          Rented
+        </Button>
+        <Button
+          variant="outline"
           className={cn(itemStatus == 'archived' && 'bg-accent text-accent-foreground')}
           onClick={() => setItemStatus('archived')}
         >
           <ArchiveIcon />
-          Archive
+          Archived
         </Button>
         <Button
           variant="outline"
