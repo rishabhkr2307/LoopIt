@@ -3,6 +3,7 @@
 import { db } from '@/db'
 import { Message, messages } from '@/db/schema/messages'
 import { auth } from '@/lib/auth/server'
+import { sendNotification } from './notification'
 
 export async function createMessage(
   conversationId: string,
@@ -18,6 +19,11 @@ export async function createMessage(
       return { success: false, error: 'You should be logged in' }
     }
 
+    const conversation = await db.query.conversations.findFirst({ where: { id: conversationId } })
+    if (!conversation) {
+      return { success: false, error: 'Conversation not found' }
+    }
+
     const [dbMessage] = await db
       .insert(messages)
       .values({
@@ -26,6 +32,11 @@ export async function createMessage(
         senderId: session.user.id,
       })
       .returning()
+    await sendNotification(
+      conversation.borrowerId == session.user.id ? conversation.ownerId : conversation.borrowerId,
+      'New Message',
+      'Someone sent you a message',
+    )
     return { success: true, data: dbMessage }
   } catch (error) {
     console.error('Error at createMessage', error)

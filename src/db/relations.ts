@@ -6,6 +6,7 @@ import { requests } from './schema/requests'
 import { conversations } from './schema/conversations'
 import { cities } from './schema/cities'
 import { reviews } from './schema/reviews'
+import { notifications } from './schema/notifications'
 
 export const relations = defineRelations(
   {
@@ -16,6 +17,7 @@ export const relations = defineRelations(
     conversations,
     cities,
     reviews,
+    notifications,
   },
   (r) => ({
     requests: {
@@ -74,6 +76,10 @@ export const relations = defineRelations(
       borrowerConversations: r.many.conversations({
         from: r.profiles.userId,
         to: r.conversations.borrowerId,
+      }),
+      notifications: r.many.notifications({
+        from: r.profiles.userId,
+        to: r.notifications.userId,
       }),
     },
     conversations: {

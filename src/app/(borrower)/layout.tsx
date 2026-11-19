@@ -16,12 +16,18 @@ export default async function BorrowerLayout({ children }: { children: React.Rea
   const { data: session } = await auth.getSession()
   const profile = await db.query.profiles.findFirst({
     where: { userId: session?.user.id },
-    with: { city: true },
+    with: {
+      city: true,
+      notifications: {
+        where: { isRead: false },
+        limit: 10,
+      },
+    },
   })
   if (!profile) return notFound()
   return (
     <div className="mx-auto w-full max-w-7xl p-4 md:p-6">
-      <Navbar profile={profile} />
+      <Navbar profile={profile} notifications={profile.notifications} />
       <div className="flex flex-col gap-8 lg:flex-row">
         {/* Mobile View */}
         <div className="mb-4 lg:hidden">

@@ -8,8 +8,18 @@ import { Button } from './ui/button'
 import { Input } from './ui/input'
 import { useQueryState } from 'nuqs'
 import Link from 'next/link'
+import { NotificationPopover } from './notification-popover'
+import { Notification } from '@/db/schema/notifications'
 
-const Navbar = ({ profile, isHome }: { profile: Profile; isHome?: boolean }) => {
+const Navbar = ({
+  profile,
+  isHome,
+  notifications,
+}: {
+  profile: Profile
+  isHome?: boolean
+  notifications: Notification[]
+}) => {
   const [searchQ, setSearchQ] = useQueryState('searchQ', {
     shallow: false,
   })
@@ -45,6 +55,7 @@ const Navbar = ({ profile, isHome }: { profile: Profile; isHome?: boolean }) => 
                 </Button>
               </ButtonGroup>
             )}
+            <NotificationPopover notifications={notifications} />
             <UserAvatar profile={profile} />
           </div>
         </nav>

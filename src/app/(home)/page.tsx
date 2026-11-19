@@ -13,6 +13,12 @@ export default async function Home({ searchParams }: { searchParams: SearchParam
   const { data: session } = await auth.getSession()
   const profile = await db.query.profiles.findFirst({
     where: { userId: session?.user.id },
+    with: {
+      notifications: {
+        where: { isRead: false },
+        limit: 10,
+      },
+    },
   })
   const filters = filterSchema.parse(await searchParams)
   if (!profile)
@@ -23,6 +29,11 @@ export default async function Home({ searchParams }: { searchParams: SearchParam
     )
   const { data } = await getItemsWithFilters(filters)
   return (
-    <FilterPage items={data?.items ?? []} profile={profile} reviewInfo={data?.reviewInfo ?? []} />
+    <FilterPage
+      items={data?.items ?? []}
+      profile={profile}
+      reviewInfo={data?.reviewInfo ?? []}
+      notifications={profile.notifications}
+    />
   )
 }

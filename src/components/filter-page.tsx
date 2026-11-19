@@ -4,11 +4,13 @@ import { ItemCard } from './item-card'
 import { Item } from '@/db/schema/items'
 import { Navbar } from './navbar'
 import { Profile } from '@/db/schema/profiles'
+import { Notification } from '@/db/schema/notifications'
 
 export default function FilterPage({
   items,
   profile,
   reviewInfo,
+  notifications,
 }: {
   items: Item[]
   profile: Profile
@@ -17,10 +19,11 @@ export default function FilterPage({
     avgRating: string | null
     totalReviews: number
   }[]
+  notifications: Notification[]
 }) {
   return (
     <div className="mx-auto w-full max-w-7xl p-4 md:p-6">
-      <Navbar profile={profile} isHome />
+      <Navbar profile={profile} isHome notifications={notifications} />
       <div className="flex flex-col gap-8 lg:flex-row">
         {/* Sidebar Filters */}
         <SidebarFilters />
