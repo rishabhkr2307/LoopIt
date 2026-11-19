@@ -35,7 +35,7 @@ export async function createMessage(
     await sendNotification(
       conversation.borrowerId == session.user.id ? conversation.ownerId : conversation.borrowerId,
       'New Message',
-      'Someone sent you a message',
+      `${session.user.name} sent you a message`,
     )
     return { success: true, data: dbMessage }
   } catch (error) {
