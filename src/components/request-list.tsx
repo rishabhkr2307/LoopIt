@@ -4,6 +4,7 @@ import { Request } from '@/db/schema/requests'
 import { Conversation } from '@/db/schema/conversations'
 import { Message } from '@/db/schema/messages'
 import RequestCard from './request-card'
+import RequestFilter from './request-filter'
 
 function RequestList({
   requests,
@@ -20,7 +21,9 @@ function RequestList({
     <div className="mx-auto w-full max-w-7xl p-4 md:p-6">
       <div className="flex flex-col gap-8 lg:flex-row">
         <div className="flex-1">
-          <div className="text-muted-foreground mb-4 text-sm">{requests.length} items found</div>
+          <div className="text-muted-foreground mb-4 text-sm">
+            <RequestFilter />
+          </div>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {requests.map(
               (req) =>

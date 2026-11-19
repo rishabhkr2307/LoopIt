@@ -4,6 +4,7 @@ import {
   categoryEnum,
   orderByPriceEnum,
   orderByTimeEnum,
+  requestStatusEnum,
   statusEnum,
 } from './enums'
 
@@ -18,4 +19,8 @@ export const filterSchema = z.object({
 
 export const profileFilterSchema = z.object({
   itemStatus: statusEnum.optional().catch(undefined),
+})
+
+export const requestsFilterSchema = z.object({
+  requestStatus: requestStatusEnum.optional().catch(undefined),
 })
