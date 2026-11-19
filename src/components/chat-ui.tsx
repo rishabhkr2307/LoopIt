@@ -69,15 +69,16 @@ export function ChatUI({
         </DrawerHeader>
         <div className="flex-1 overflow-y-auto">
           <div className="flex w-full max-w-sm flex-col gap-4 px-4 py-12">
-            {msgs.map((message) => (
-              <Bubble
-                key={message.id}
-                variant={message.senderId == userId ? 'default' : 'muted'}
-                align={message.senderId == userId ? 'end' : 'start'}
-              >
-                <BubbleContent>{message.message}</BubbleContent>
-              </Bubble>
-            ))}
+            {msgs &&
+              msgs.map((message) => (
+                <Bubble
+                  key={message.id}
+                  variant={message.senderId == userId ? 'default' : 'muted'}
+                  align={message.senderId == userId ? 'end' : 'start'}
+                >
+                  <BubbleContent>{message.message}</BubbleContent>
+                </Bubble>
+              ))}
           </div>
         </div>
         <DrawerFooter>

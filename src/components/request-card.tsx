@@ -147,7 +147,7 @@ function RequestCard({
               <ChatUI
                 open={chatOpen}
                 setOpen={setChatOpen}
-                conversationId={conversation.id}
+                conversationId={conversation?.id}
                 item={item}
                 messages={messages}
                 userId={userId}
