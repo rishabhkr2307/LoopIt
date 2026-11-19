@@ -30,6 +30,7 @@ function ProfileCard({
 
           <div className="mt-6 space-y-4">
             <div className="flex flex-col text-sm text-center">
+              <span className="font-bold">{profile.fullName}</span>
               <span>{profile.bio}</span>
               <span className="flex gap-2 mt-2 justify-center items-center">
                 <MapPinIcon />

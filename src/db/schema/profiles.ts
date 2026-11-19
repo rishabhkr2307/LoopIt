@@ -6,6 +6,7 @@ export const profiles = pgTable(
   (t) => ({
     id: t.uuid('id').defaultRandom().primaryKey(),
     userId: t.uuid('user_id').notNull().unique(),
+    fullName: t.text('full_name').notNull(),
     bio: t.text('bio'),
     avatar: t.text('avatar'),
     cityId: t

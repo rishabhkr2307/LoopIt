@@ -41,7 +41,7 @@ export async function createRentalRequest(
     })
     return { success: true }
   } catch (error) {
-    console.error('Error at requestRental', error)
+    console.error('Error at createRentalRequest', error)
     return { success: false }
   }
 }

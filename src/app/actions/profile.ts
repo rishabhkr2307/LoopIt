@@ -61,12 +61,13 @@ export async function createProfile(_prevState: { error: string } | null, formDa
     }
     await db.insert(profiles).values({
       avatar: avatarUrl,
+      fullName: session.user.name,
       bio: data.bio,
       cityId: city.id,
       userId: session.user.id,
     })
   } catch (error) {
-    console.error('Error at signInWithEmail', error)
+    console.error('Error at createProfile', error)
     return { error: 'Something went wrong' }
   }
   redirect('/')
@@ -131,7 +132,7 @@ export async function editProfile(_prevState: { error: string } | null, formData
       })
       .where(eq(profiles.id, data.profileId))
   } catch (error) {
-    console.error('Error at signInWithEmail', error)
+    console.error('Error at editProfile', error)
     return { error: 'Something went wrong' }
   }
   redirect('/')
