@@ -107,7 +107,7 @@ export async function deleteRentalRequest(
     }
 
     const request = await db.query.requests.findFirst({
-      where: { borrowerId: session.user.id },
+      where: { id: requestId, borrowerId: session.user.id },
     })
     if (!request) {
       return { success: false, error: 'Request not found or You are not the borrower' }
@@ -116,6 +116,29 @@ export async function deleteRentalRequest(
     return { success: true }
   } catch (error) {
     console.error('Error at deleteRentalRequest', error)
+    return { success: false }
+  }
+}
+
+export async function completeRentalRequest(
+  requestId: string,
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    const { data: session } = await auth.getSession()
+    if (!session || !session.user) {
+      return { success: false, error: 'You should be logged in' }
+    }
+
+    const request = await db.query.requests.findFirst({
+      where: { id: requestId, ownerId: session.user.id },
+    })
+    if (!request) {
+      return { success: false, error: 'Request not found or You are not the owner' }
+    }
+    await db.update(requests).set({ status: 'completed' }).where(eq(requests.id, requestId))
+    return { success: true }
+  } catch (error) {
+    console.error('Error at completeRentalRequest', error)
     return { success: false }
   }
 }

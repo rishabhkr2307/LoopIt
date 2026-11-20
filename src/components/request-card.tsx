@@ -1,5 +1,6 @@
 import { Item } from '@/db/schema/items'
 import {
+  CheckCircleIcon,
   CheckIcon,
   DotsThreeIcon,
   PaperPlaneTiltIcon,
@@ -21,6 +22,7 @@ import {
 import { ChatUI } from './chat-ui'
 import {
   approveRentalRequest,
+  completeRentalRequest,
   deleteRentalRequest,
   rejectRentalRequest,
 } from '@/app/actions/requests'
@@ -91,6 +93,20 @@ function RequestCard({
     }
   }
 
+  const handleComplete = async (requestId: string) => {
+    try {
+      const { success, error } = await completeRentalRequest(requestId)
+      if (!success) {
+        toast.error(error)
+        return
+      }
+      toast.success('Completion success')
+    } catch (error) {
+      console.error(error)
+      toast.error('Completion failed')
+    }
+  }
+
   return (
     <div className="group overflow-hidden rounded-lg border">
       <div className="relative aspect-square overflow-hidden bg-gray-100">
@@ -120,13 +136,13 @@ function RequestCard({
               {request.status == 'approved' ? (
                 <DisabledButtonTooltip message="You've already approved">
                   <Button disabled>
-                    <CheckIcon />
+                    <CheckCircleIcon />
                     Approved
                   </Button>
                 </DisabledButtonTooltip>
               ) : (
                 <Button onClick={async () => await handleApprove(request.id)}>
-                  <CheckIcon />
+                  <CheckCircleIcon />
                   Approve
                 </Button>
               )}
@@ -152,6 +168,18 @@ function RequestCard({
                         onClick={async () => await handleReject(request.id)}
                       >
                         <XIcon /> Reject
+                      </DropdownMenuItem>
+                    )}
+
+                    {request.status == 'completed' ? (
+                      <DisabledButtonTooltip message="Rental request is already complete">
+                        <DropdownMenuItem disabled>
+                          <CheckIcon /> Complete
+                        </DropdownMenuItem>
+                      </DisabledButtonTooltip>
+                    ) : (
+                      <DropdownMenuItem onClick={async () => await handleComplete(request.id)}>
+                        <CheckIcon /> Complete
                       </DropdownMenuItem>
                     )}
                     {request.status == 'completed' ? (
