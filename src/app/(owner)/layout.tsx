@@ -22,6 +22,7 @@ export default async function OwnerLayout({ children }: { children: React.ReactN
         where: { isRead: false },
         limit: 10,
       },
+      ownerReviews: true,
     },
   })
   if (!profile) return notFound()
@@ -31,11 +32,21 @@ export default async function OwnerLayout({ children }: { children: React.ReactN
       <div className="flex flex-col gap-8 lg:flex-row">
         {/* Mobile View */}
         <div className="mb-4 lg:hidden">
-          <ProfileCard profile={profile} isOwner city={profile.city as City} />
+          <ProfileCard
+            profile={profile}
+            isOwner
+            city={profile.city as City}
+            reviews={profile.ownerReviews}
+          />
         </div>
         {/* Desktop View */}
         <div className="hidden w-64 shrink-0 lg:block">
-          <ProfileCard profile={profile} isOwner city={profile.city as City} />
+          <ProfileCard
+            profile={profile}
+            isOwner
+            city={profile.city as City}
+            reviews={profile.ownerReviews}
+          />
         </div>
         {children}
       </div>

@@ -196,7 +196,7 @@ export async function getItemsWithFilters(filters: {
   data?: {
     items: Item[]
     reviewInfo: {
-      itemId: string
+      itemId: string | null
       avgRating: string | null
       totalReviews: number
     }[]

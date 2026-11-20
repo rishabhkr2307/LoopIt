@@ -22,6 +22,7 @@ export default async function BorrowerLayout({ children }: { children: React.Rea
         where: { isRead: false },
         limit: 10,
       },
+      borrowerReviews: true,
     },
   })
   if (!profile) return notFound()
@@ -31,11 +32,19 @@ export default async function BorrowerLayout({ children }: { children: React.Rea
       <div className="flex flex-col gap-8 lg:flex-row">
         {/* Mobile View */}
         <div className="mb-4 lg:hidden">
-          <ProfileCard profile={profile} city={profile.city as City} />
+          <ProfileCard
+            profile={profile}
+            city={profile.city as City}
+            reviews={profile.borrowerReviews}
+          />
         </div>
         {/* Desktop View */}
         <div className="hidden w-64 shrink-0 lg:block">
-          <ProfileCard profile={profile} city={profile.city as City} />
+          <ProfileCard
+            profile={profile}
+            city={profile.city as City}
+            reviews={profile.borrowerReviews}
+          />
         </div>
         {children}
       </div>

@@ -26,7 +26,9 @@ export default async function ProfilePage({ params }: { params: Promise<{ id: st
             item={item}
             avgRating={
               item.reviews.length > 0
-                ? item.reviews.reduce((sum, r) => (sum += r.rating), 0).toString()
+                ? (
+                    item.reviews.reduce((sum, r) => (sum += r.rating), 0) / item.reviews.length
+                  ).toString()
                 : '0'
             }
             totalReviews={item.reviews.length}

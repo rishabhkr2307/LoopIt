@@ -81,6 +81,14 @@ export const relations = defineRelations(
         from: r.profiles.userId,
         to: r.notifications.userId,
       }),
+      ownerReviews: r.many.reviews({
+        from: r.profiles.userId,
+        to: r.reviews.revieweeId,
+      }),
+      borrowerReviews: r.many.reviews({
+        from: r.profiles.userId,
+        to: r.reviews.reviewerId,
+      }),
     },
     conversations: {
       item: r.one.items({

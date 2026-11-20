@@ -15,7 +15,7 @@ export default function FilterPage({
   items: Item[]
   profile: Profile
   reviewInfo: {
-    itemId: string
+    itemId: string | null
     avgRating: string | null
     totalReviews: number
   }[]
