@@ -3,6 +3,7 @@ import {
   CheckIcon,
   DotsThreeIcon,
   PaperPlaneTiltIcon,
+  PencilIcon,
   TrashIcon,
   XIcon,
 } from '@phosphor-icons/react'
@@ -28,6 +29,7 @@ import { Request } from '@/db/schema/requests'
 import { Message } from '@/db/schema/messages'
 import { Conversation } from '@/db/schema/conversations'
 import { DisabledButtonTooltip } from './disabled-button-tooltip'
+import { CreateReviewDialog } from './create-review-dialog'
 
 function RequestCard({
   item,
@@ -45,6 +47,7 @@ function RequestCard({
   isOwner?: boolean
 }) {
   const [chatOpen, setChatOpen] = useState(false)
+  const [reviewOpen, setReviewOpen] = useState(false)
 
   const handleReject = async (requestId: string) => {
     try {
@@ -151,6 +154,17 @@ function RequestCard({
                         <XIcon /> Reject
                       </DropdownMenuItem>
                     )}
+                    {request.status == 'completed' ? (
+                      <DropdownMenuItem onClick={() => setReviewOpen(true)}>
+                        <PencilIcon /> Review
+                      </DropdownMenuItem>
+                    ) : (
+                      <DisabledButtonTooltip message="You can review once rent is complete">
+                        <DropdownMenuItem disabled>
+                          <PencilIcon /> Review
+                        </DropdownMenuItem>
+                      </DisabledButtonTooltip>
+                    )}
                     {!conversation ? (
                       <DisabledButtonTooltip message="Approve the request to start messaging">
                         <DropdownMenuItem disabled>
@@ -175,6 +189,7 @@ function RequestCard({
                 messages={messages}
                 userId={userId}
               />
+              <CreateReviewDialog open={reviewOpen} setOpen={setReviewOpen} request={request} />
             </ButtonGroup>
           ) : (
             <ButtonGroup>
@@ -205,6 +220,17 @@ function RequestCard({
                         Message
                       </DropdownMenuItem>
                     )}
+                    {request.status == 'completed' ? (
+                      <DropdownMenuItem onClick={() => setReviewOpen(true)}>
+                        <PencilIcon /> Review
+                      </DropdownMenuItem>
+                    ) : (
+                      <DisabledButtonTooltip message="You can review once rent is complete">
+                        <DropdownMenuItem disabled>
+                          <PencilIcon /> Review
+                        </DropdownMenuItem>
+                      </DisabledButtonTooltip>
+                    )}
                   </DropdownMenuGroup>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -216,6 +242,7 @@ function RequestCard({
                 messages={messages ?? []}
                 userId={userId}
               />
+              <CreateReviewDialog open={reviewOpen} setOpen={setReviewOpen} request={request} />
             </ButtonGroup>
           )}
         </div>

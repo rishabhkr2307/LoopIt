@@ -21,6 +21,7 @@ export const categoryEnum = z.enum([
 
 export const statusEnum = z.enum(['available', 'rented', 'archived'])
 export const requestStatusEnum = z.enum(['pending', 'approved', 'rejected', 'completed'])
+export const reviewTypeEnum = z.enum(['item', 'owner', 'borrower'])
 
 export const orderByPriceEnum = z.enum(['asc', 'desc'])
 export const orderByTimeEnum = z.enum(['asc', 'desc'])

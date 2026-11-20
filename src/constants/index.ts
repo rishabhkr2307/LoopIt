@@ -38,3 +38,9 @@ export const popularCities = [
   { label: 'Kolkata', value: '057a4d79-b384-40c4-8cd0-1cd9bf466f08' },
   { label: 'Bilaspur', value: 'db1b08a9-8ee4-44b8-80d4-e80611a67a03' },
 ] as const
+
+export const reviewType = [
+  { label: 'Item', value: 'item' },
+  { label: 'Owner', value: 'owner' },
+  { label: 'Borrower', value: 'borrower' },
+] as const
