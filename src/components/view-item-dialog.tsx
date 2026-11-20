@@ -97,6 +97,9 @@ export function ViewItemDialog({
             </div>
           </div>
         </div>
+        <span className="text-muted-foreground text-sm text-right italic">
+          You can negotiate after rental request approval
+        </span>
         <DialogFooter>
           <DialogClose
             render={

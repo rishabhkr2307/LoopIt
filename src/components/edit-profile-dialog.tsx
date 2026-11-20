@@ -37,50 +37,51 @@ export function EditProfileDialog({ profile, city }: { profile: Profile; city: C
         <form action={formAction}>
           <DialogHeader>
             <DialogTitle>Edit Profile</DialogTitle>
-            <DialogDescription>Edit your profile</DialogDescription>
           </DialogHeader>
-          <FieldGroup>
-            <Field>
-              <Label htmlFor="name">Avatar</Label>
-              <Input id="avatar" name="avatar" type="file" accept="image/*" />
-            </Field>
-            <Field>
-              <Label htmlFor="bio">Bio</Label>
-              <Textarea
-                className="max-h-32 resize-none overflow-y-auto"
-                id="bio"
-                name="bio"
-                placeholder="Your bio goes here"
-                defaultValue={profile.bio ?? ''}
-              />
-            </Field>
-            <Field>
-              <Label htmlFor="name">City</Label>
-              <Input
-                id="city"
-                name="city"
-                type="text"
-                placeholder="Delhi"
-                required
-                defaultValue={city.name}
-              />
-            </Field>
-            <Field>
-              <Label htmlFor="pincode">Pincode</Label>
-              <Input
-                id="pincode"
-                name="pincode"
-                type="number"
-                placeholder="110001"
-                required
-                defaultValue={city.pincode}
-              />
-            </Field>
-            <input type="hidden" name="profile_id" value={profile.id} />
-            {state?.error && (
-              <div className="rounded-md py-2 text-sm text-red-500">{state.error}</div>
-            )}
-          </FieldGroup>
+          <div className="mt-4">
+            <FieldGroup>
+              <Field>
+                <Label htmlFor="name">Avatar</Label>
+                <Input id="avatar" name="avatar" type="file" accept="image/*" />
+              </Field>
+              <Field>
+                <Label htmlFor="bio">Bio</Label>
+                <Textarea
+                  className="max-h-32 resize-none overflow-y-auto"
+                  id="bio"
+                  name="bio"
+                  placeholder="Your bio goes here"
+                  defaultValue={profile.bio ?? ''}
+                />
+              </Field>
+              <Field>
+                <Label htmlFor="name">City</Label>
+                <Input
+                  id="city"
+                  name="city"
+                  type="text"
+                  placeholder="Delhi"
+                  required
+                  defaultValue={city.name}
+                />
+              </Field>
+              <Field>
+                <Label htmlFor="pincode">Pincode</Label>
+                <Input
+                  id="pincode"
+                  name="pincode"
+                  type="number"
+                  placeholder="110001"
+                  required
+                  defaultValue={city.pincode}
+                />
+              </Field>
+              <input type="hidden" name="profile_id" value={profile.id} />
+              {state?.error && (
+                <div className="rounded-md py-2 text-sm text-red-500">{state.error}</div>
+              )}
+            </FieldGroup>
+          </div>
           <DialogFooter>
             <DialogClose render={<Button variant="outline">Cancel</Button>} />
             <Button type="submit" disabled={isPending}>
