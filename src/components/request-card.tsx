@@ -27,6 +27,7 @@ import { toast } from 'sonner'
 import { Request } from '@/db/schema/requests'
 import { Message } from '@/db/schema/messages'
 import { Conversation } from '@/db/schema/conversations'
+import { DisabledButtonTooltip } from './disabled-button-tooltip'
 
 function RequestCard({
   item,
@@ -113,13 +114,19 @@ function RequestCard({
           </div>
           {isOwner ? (
             <ButtonGroup>
-              <Button
-                disabled={request.status == 'approved'}
-                onClick={async () => await handleApprove(request.id)}
-              >
-                <CheckIcon />
-                {request.status == 'approved' ? 'Approved' : 'Approve'}
-              </Button>
+              {request.status == 'approved' ? (
+                <DisabledButtonTooltip message="You've already approved">
+                  <Button disabled>
+                    <CheckIcon />
+                    Approved
+                  </Button>
+                </DisabledButtonTooltip>
+              ) : (
+                <Button onClick={async () => await handleApprove(request.id)}>
+                  <CheckIcon />
+                  Approve
+                </Button>
+              )}
               <DropdownMenu>
                 <DropdownMenuTrigger
                   render={
@@ -130,17 +137,33 @@ function RequestCard({
                 />
                 <DropdownMenuContent align="end" className="w-40">
                   <DropdownMenuGroup>
-                    <DropdownMenuItem
-                      disabled={request.status == 'rejected'}
-                      className="text-destructive"
-                      onClick={async () => await handleReject(request.id)}
-                    >
-                      <XIcon /> {request.status == 'rejected' ? 'Rejected' : 'Reject'}
-                    </DropdownMenuItem>
-                    <DropdownMenuItem disabled={!conversation} onClick={() => setChatOpen(true)}>
-                      <PaperPlaneTiltIcon />
-                      Message
-                    </DropdownMenuItem>
+                    {request.status == 'rejected' ? (
+                      <DisabledButtonTooltip message="You've already rejected">
+                        <DropdownMenuItem disabled className="text-destructive">
+                          <XIcon /> Rejected
+                        </DropdownMenuItem>
+                      </DisabledButtonTooltip>
+                    ) : (
+                      <DropdownMenuItem
+                        className="text-destructive"
+                        onClick={async () => await handleReject(request.id)}
+                      >
+                        <XIcon /> Reject
+                      </DropdownMenuItem>
+                    )}
+                    {!conversation ? (
+                      <DisabledButtonTooltip message="Approve the request to start messaging">
+                        <DropdownMenuItem disabled>
+                          <PaperPlaneTiltIcon />
+                          Message
+                        </DropdownMenuItem>
+                      </DisabledButtonTooltip>
+                    ) : (
+                      <DropdownMenuItem onClick={() => setChatOpen(true)}>
+                        <PaperPlaneTiltIcon />
+                        Message
+                      </DropdownMenuItem>
+                    )}
                   </DropdownMenuGroup>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -169,10 +192,19 @@ function RequestCard({
                 />
                 <DropdownMenuContent align="end" className="w-40">
                   <DropdownMenuGroup>
-                    <DropdownMenuItem onClick={() => setChatOpen(true)} disabled={!conversation}>
-                      <PaperPlaneTiltIcon />
-                      Message
-                    </DropdownMenuItem>
+                    {!conversation ? (
+                      <DisabledButtonTooltip message="You can message after approval">
+                        <DropdownMenuItem disabled>
+                          <PaperPlaneTiltIcon />
+                          Message
+                        </DropdownMenuItem>
+                      </DisabledButtonTooltip>
+                    ) : (
+                      <DropdownMenuItem onClick={() => setChatOpen(true)}>
+                        <PaperPlaneTiltIcon />
+                        Message
+                      </DropdownMenuItem>
+                    )}
                   </DropdownMenuGroup>
                 </DropdownMenuContent>
               </DropdownMenu>
