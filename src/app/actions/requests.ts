@@ -2,6 +2,7 @@
 
 import { db } from '@/db'
 import { conversations } from '@/db/schema/conversations'
+import { items } from '@/db/schema/items'
 import { requests } from '@/db/schema/requests'
 import { auth } from '@/lib/auth/server'
 import { eq } from 'drizzle-orm'
@@ -66,6 +67,7 @@ export async function approveRentalRequest(
       return { success: false, error: 'You can only approve pending requests' }
     }
     await db.update(requests).set({ status: 'approved' }).where(eq(requests.id, requestId))
+    await db.update(items).set({ itemStatus: 'rented' }).where(eq(items.id, request.itemId))
     await db.insert(conversations).values({
       ownerId: session.user.id,
       itemId: request.itemId,
@@ -152,6 +154,7 @@ export async function completeRentalRequest(
       return { success: false, error: 'You can not complete a request before approval' }
     }
     await db.update(requests).set({ status: 'completed' }).where(eq(requests.id, requestId))
+    await db.update(items).set({ itemStatus: 'available' }).where(eq(items.id, request.itemId))
     revalidatePath('/owner/requests')
     return { success: true }
   } catch (error) {

@@ -25,12 +25,11 @@ import {
 import { PlusIcon } from '@phosphor-icons/react'
 import { useActionState, useState } from 'react'
 import { createItem } from '@/app/actions/items'
-import { itemCategories, itemStatus } from '@/constants'
+import { itemCategories } from '@/constants'
 
 export function CreateItemDialog() {
   const [state, formAction, isPending] = useActionState(createItem, null)
   const [category, setCategory] = useState('electronics_gadgets')
-  const [status, setStatus] = useState('available')
 
   return (
     <Dialog>
@@ -98,29 +97,7 @@ export function CreateItemDialog() {
               <Label htmlFor="price_per_month">Price Per Month</Label>
               <Input id="price_per_month" name="price_per_month" placeholder="0" type="number" />
             </Field>
-            <Field>
-              <FieldLabel htmlFor="status">Status</FieldLabel>
-              <Select
-                items={itemStatus}
-                value={status}
-                onValueChange={(value) => setStatus(value ?? 'available')}
-              >
-                <SelectTrigger id="status">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    {itemStatus.map((s) => (
-                      <SelectItem key={s.value} value={s.value}>
-                        {s.label}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            </Field>
             <input type="hidden" name="category" value={category} />
-            <input type="hidden" name="status" value={status} />
             {state?.error && (
               <div className="rounded-md py-2 text-sm text-red-500">{state.error}</div>
             )}

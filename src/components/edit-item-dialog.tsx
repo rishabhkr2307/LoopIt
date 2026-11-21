@@ -25,13 +25,12 @@ import {
 import { PencilIcon } from '@phosphor-icons/react'
 import { useActionState, useState } from 'react'
 import { editItem } from '@/app/actions/items'
-import { itemCategories, itemStatus } from '@/constants'
+import { itemCategories } from '@/constants'
 import { Item } from '@/db/schema/items'
 
 export function EditItemDialog({ item }: { item: Item }) {
   const [state, formAction, isPending] = useActionState(editItem, null)
   const [category, setCategory] = useState('electronics_gadgets')
-  const [status, setStatus] = useState('available')
 
   return (
     <Dialog>
@@ -120,30 +119,7 @@ export function EditItemDialog({ item }: { item: Item }) {
                 defaultValue={item.pricePerMonth}
               />
             </Field>
-            <Field>
-              <FieldLabel htmlFor="status">Status</FieldLabel>
-              <Select
-                items={itemStatus}
-                value={status}
-                defaultValue={item.itemStatus}
-                onValueChange={(value) => setStatus(value ?? 'available')}
-              >
-                <SelectTrigger id="status">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    {itemStatus.map((s) => (
-                      <SelectItem key={s.value} value={s.value}>
-                        {s.label}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            </Field>
             <input type="hidden" name="category" value={category} />
-            <input type="hidden" name="status" value={status} />
             <input type="hidden" name="item_id" value={item.id} />
             {state?.error && (
               <div className="rounded-md py-2 text-sm text-red-500">{state.error}</div>

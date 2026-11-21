@@ -18,7 +18,6 @@ export async function createItem(_prevState: { error: string } | null, formData:
     image: formData.get('image'),
     price: formData.get('price'),
     category: formData.get('category'),
-    status: formData.get('status'),
     pricePerDay: formData.get('price_per_day'),
     pricePerWeek: formData.get('price_per_week'),
     pricePerMonth: formData.get('price_per_month'),
@@ -79,7 +78,6 @@ export async function editItem(_prevState: { error: string } | null, formData: F
     image: formData.get('image'),
     price: formData.get('price'),
     category: formData.get('category'),
-    status: formData.get('status'),
     pricePerDay: formData.get('price_per_day'),
     pricePerWeek: formData.get('price_per_week'),
     pricePerMonth: formData.get('price_per_month'),
@@ -284,7 +282,7 @@ export async function getItemsWithFilters(filters: {
     const dbItems = await db
       .select()
       .from(items)
-      .where(and(...conditions))
+      .where(and(...conditions, eq(items.itemStatus, 'available')))
       .orderBy(...orderBy)
 
     const reviewInfo = await db

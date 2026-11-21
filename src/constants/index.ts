@@ -19,7 +19,7 @@ export const itemCategories = [
 
 export const itemStatus = [
   { label: 'Available', value: 'available' },
-  { label: 'Unavailable', value: 'unavailable' },
+  { label: 'Rented', value: 'rented' },
   { label: 'Archive', value: 'archived' },
 ] as const
 
