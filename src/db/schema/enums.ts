@@ -9,6 +9,7 @@ export const requestStatus = pgEnum('request_status', [
   'rejected',
   'completed',
 ])
+export const requestDurationType = pgEnum('duration_type', ['days', 'weeks', 'months'])
 
 export const itemCategory = pgEnum('item_category', [
   'electronics_gadgets',

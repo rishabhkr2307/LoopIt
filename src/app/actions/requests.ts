@@ -5,46 +5,56 @@ import { conversations } from '@/db/schema/conversations'
 import { items } from '@/db/schema/items'
 import { requests } from '@/db/schema/requests'
 import { auth } from '@/lib/auth/server'
+import { createRequestSchema } from '@/schema/request'
 import { eq } from 'drizzle-orm'
 import { revalidatePath } from 'next/cache'
+import { redirect } from 'next/navigation'
 
 export async function createRentalRequest(
-  itemId: string,
-): Promise<{ success: boolean; error?: string }> {
+  _prevState: { error: string } | null,
+  formData: FormData,
+) {
+  const { success, data, error } = createRequestSchema.safeParse({
+    itemId: formData.get('item_id'),
+    requestDurationType: formData.get('duration_type'),
+    duration: formData.get('duration'),
+    message: formData.get('message'),
+  })
+
+  if (!success) {
+    return { error: error.issues[0].message || 'Validation error' }
+  }
   try {
     const { data: session } = await auth.getSession()
     if (!session || !session.user) {
-      return { success: false, error: 'You should be logged in' }
+      return { error: 'You should be logged in' }
     }
-    const profile = await db.query.profiles.findFirst({
-      where: { userId: session.user.id },
-    })
-    if (!profile) {
-      return { success: false, error: 'Profile not found' }
-    }
-    const item = await db.query.items.findFirst({ where: { id: itemId } })
+    const item = await db.query.items.findFirst({ where: { id: data.itemId } })
     if (!item || item.itemStatus != 'available') {
-      return { success: false, error: 'Item not available' }
+      return { error: 'Item not available' }
     }
-    if (item.ownerId == profile.userId) {
-      return { success: false, error: 'You are the owner' }
+    if (item.ownerId == session.user.id) {
+      return { error: 'You are the owner' }
     }
 
     const request = await db.query.requests.findFirst({
-      where: { itemId: item.id, borrowerId: profile.userId },
+      where: { itemId: item.id, borrowerId: session.user.id },
     })
     if (request) {
-      return { success: false, error: 'You already have a rental request on this item' }
+      return { error: 'You already have a rental request on this item' }
     }
     await db.insert(requests).values({
       itemId: item.id,
-      borrowerId: profile.userId,
+      borrowerId: session.user.id,
       ownerId: item.ownerId,
+      durationType: data.requestDurationType,
+      duration: data.duration,
+      message: data.message,
     })
-    return { success: true }
+    redirect('/')
   } catch (error) {
     console.error('Error at createRentalRequest', error)
-    return { success: false }
+    return { error: 'Something went wrong' }
   }
 }
 

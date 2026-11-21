@@ -1,7 +1,7 @@
 import { pgTable } from 'drizzle-orm/pg-core'
 import { items } from './items'
 import { profiles } from './profiles'
-import { requestStatus } from './enums'
+import { requestDurationType, requestStatus } from './enums'
 export const requests = pgTable('requests', (t) => ({
   id: t.uuid('id').defaultRandom().primaryKey(),
   itemId: t
@@ -16,6 +16,9 @@ export const requests = pgTable('requests', (t) => ({
     .uuid('borrower_id')
     .references(() => profiles.userId, { onDelete: 'cascade' })
     .notNull(),
+  durationType: requestDurationType('duration_type').notNull(),
+  duration: t.integer().notNull(),
+  message: t.text(),
   createdAt: t.timestamp('created_at').notNull().defaultNow(),
   updatedAt: t
     .timestamp('updated_at')

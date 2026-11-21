@@ -1,7 +1,6 @@
 import { index, pgTable } from 'drizzle-orm/pg-core'
 import { profiles } from './profiles'
 import { itemCategory, itemStatus } from './enums'
-import { cities } from './cities'
 import { sql } from 'drizzle-orm'
 
 export const items = pgTable(

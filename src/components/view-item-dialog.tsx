@@ -1,5 +1,4 @@
 'use client'
-import { createRentalRequest } from '@/app/actions/requests'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -8,12 +7,24 @@ import {
   DialogFooter,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import { itemCategories } from '@/constants'
+import { itemCategories, requestDurationType } from '@/constants'
 import { Item } from '@/db/schema/items'
 import { PlusIcon, StarIcon } from '@phosphor-icons/react'
 import Image from 'next/image'
-import { useState } from 'react'
-import { toast } from 'sonner'
+import { useActionState, useState } from 'react'
+import { createRentalRequest } from '@/app/actions/requests'
+import { Field, FieldGroup, FieldLabel } from './ui/field'
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from './ui/select'
+import { Label } from './ui/label'
+import { Input } from './ui/input'
+import { Textarea } from './ui/textarea'
 
 export function ViewItemDialog({
   item,
@@ -24,92 +35,134 @@ export function ViewItemDialog({
   avgRating: string | null
   totalReviews: number
 }) {
-  const [open, setOpen] = useState(false)
-  const handleRentalRequest = async () => {
-    try {
-      const { success, error } = await createRentalRequest(item.id)
-      if (!success) {
-        toast.error(error ?? 'Rental request failed')
-        return
-      }
-      toast.success('Rental request success')
-    } catch (error) {
-      console.error(error)
-      toast.error('Something went wrong')
-    } finally {
-      setOpen(false)
-    }
-  }
+  const [state, formAction, isPending] = useActionState(createRentalRequest, null)
+  const [type, setType] = useState('days')
   return (
-    <Dialog open={open}>
+    <Dialog>
       <DialogTrigger
         render={
-          <Button size="sm" className="h-8" onClick={() => setOpen(true)}>
+          <Button size="sm" className="h-8">
             <PlusIcon className="mr-2 h-4 w-4" />
             More
           </Button>
         }
       />
-      <DialogContent className="sm:max-w-sm" showCloseButton={false}>
-        <div className="group overflow-hidden">
-          <div className="relative aspect-square overflow-hidden bg-gray-100">
-            <Image
-              src={item.imageUrl}
-              alt={item.name}
-              className="h-full w-full object-cover transition-transform group-hover:scale-105"
-              width={1024}
-              height={1024}
-            />
-          </div>
-          <div className="p-4">
-            <div className="flex justify-between">
-              <div>
-                <h3 className="font-medium">{item.name}</h3>
-                <p className="text-muted-foreground text-sm">
-                  {itemCategories.filter((i) => i.value == item.itemCategory)[0].label}
-                </p>
-              </div>
-              <div className="text-right">
-                <div className="flex items-center gap-1">
-                  <StarIcon className="fill-primary text-primary h-4 w-4" />
-                  <span className="text-sm font-medium">{avgRating}</span>
+      <DialogContent className="sm:max-w-2xl" showCloseButton={false}>
+        <form action={formAction}>
+          <div className="grid gap-2 grid-cols-1 md:grid-cols-2">
+            <div className="col-span-1">
+              <div className="group overflow-hidden">
+                <div className="relative aspect-square overflow-hidden bg-gray-100">
+                  <Image
+                    src={item.imageUrl}
+                    alt={item.name}
+                    className="h-full w-full object-cover transition-transform group-hover:scale-105"
+                    width={1024}
+                    height={1024}
+                  />
                 </div>
-                <p className="text-muted-foreground text-xs">{totalReviews} reviews</p>
+                <div className="p-4">
+                  <div className="flex justify-between">
+                    <div>
+                      <h3 className="font-medium">{item.name}</h3>
+                      <p className="text-muted-foreground text-sm">
+                        {itemCategories.filter((i) => i.value == item.itemCategory)[0].label}
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <div className="flex items-center gap-1">
+                        <StarIcon className="fill-primary text-primary h-4 w-4" />
+                        <span className="text-sm font-medium">{avgRating}</span>
+                      </div>
+                      <p className="text-muted-foreground text-xs">{totalReviews} reviews</p>
+                    </div>
+                  </div>
+                  <div className="max-h-48 overflow-y-auto">
+                    <h3 className="font-medium mt-4">Description</h3>
+                    <span className="text-muted-foreground text-sm ">{item.description}</span>
+                  </div>
+                  <div className="mt-4 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium">${item.pricePerDay}</span>
+                      <span className="text-muted-foreground text-sm">Per Day</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium">${item.pricePerWeek}</span>
+                      <span className="text-muted-foreground text-sm">Per Week</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium">${item.pricePerMonth}</span>
+                      <span className="text-muted-foreground text-sm">Per Month</span>
+                    </div>
+                  </div>
+                </div>
               </div>
+              <span className="text-muted-foreground text-sm text-right italic">
+                You can negotiate after rental request approval
+              </span>
             </div>
-            <div className="max-h-48 overflow-y-auto">
-              <h3 className="font-medium mt-4">Description</h3>
-              <span className="text-muted-foreground text-sm ">{item.description}</span>
-            </div>
-            <div className="mt-4 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <span className="font-medium">${item.pricePerDay}</span>
-                <span className="text-muted-foreground text-sm">Per Day</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="font-medium">${item.pricePerWeek}</span>
-                <span className="text-muted-foreground text-sm">Per Week</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="font-medium">${item.pricePerMonth}</span>
-                <span className="text-muted-foreground text-sm">Per Month</span>
-              </div>
+
+            <div className="col-span-1">
+              <FieldGroup>
+                <Field>
+                  <FieldLabel htmlFor="category">Request For</FieldLabel>
+                  <Select
+                    items={requestDurationType}
+                    value={type}
+                    onValueChange={(value) => setType(value ?? 'days')}
+                  >
+                    <SelectTrigger id="request_type">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        {requestDurationType.map((t) => (
+                          <SelectItem key={t.value} value={t.value}>
+                            {t.label}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </Field>
+
+                <Field>
+                  <Label htmlFor="message">Message for Owner</Label>
+                  <Textarea
+                    className="max-h-32 resize-none overflow-y-auto"
+                    id="message"
+                    name="message"
+                    placeholder="(Optional)"
+                  />
+                </Field>
+
+                <Field>
+                  <Label htmlFor="duration">Duration</Label>
+                  <Input
+                    id="duration"
+                    name="duration"
+                    placeholder="e.g. 12"
+                    min={1}
+                    type="number"
+                    required
+                  />
+                </Field>
+                <input type="hidden" name="duration_type" value={type} />
+                <input type="hidden" name="item_id" value={item.id} />
+                {state?.error && (
+                  <div className="rounded-md py-2 text-sm text-red-500">{state.error}</div>
+                )}
+              </FieldGroup>
             </div>
           </div>
-        </div>
-        <span className="text-muted-foreground text-sm text-right italic">
-          You can negotiate after rental request approval
-        </span>
-        <DialogFooter>
-          <DialogClose
-            render={
-              <Button variant="outline" onClick={() => setOpen(false)}>
-                Cancel
-              </Button>
-            }
-          />
-          <Button onClick={handleRentalRequest}>Request Rental</Button>
-        </DialogFooter>
+
+          <DialogFooter>
+            <DialogClose render={<Button variant="outline">Cancel</Button>} />
+            <Button type="submit" disabled={isPending}>
+              Request
+            </Button>
+          </DialogFooter>
+        </form>
       </DialogContent>
     </Dialog>
   )

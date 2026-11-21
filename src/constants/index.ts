@@ -37,3 +37,9 @@ export const reviewType = [
   { label: 'Owner', value: 'owner' },
   { label: 'Borrower', value: 'borrower' },
 ] as const
+
+export const requestDurationType = [
+  { label: 'Days', value: 'days' },
+  { label: 'Weeks', value: 'weeks' },
+  { label: 'Months', value: 'months' },
+] as const
