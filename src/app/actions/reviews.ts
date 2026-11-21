@@ -3,6 +3,7 @@ import { db } from '@/db'
 import { reviews } from '@/db/schema/reviews'
 import { auth } from '@/lib/auth/server'
 import { createReviewSchema } from '@/schema/review'
+import { revalidatePath } from 'next/cache'
 import * as z from 'zod'
 
 export async function createReview(_prevState: { error: string } | null, formData: FormData) {
@@ -70,6 +71,7 @@ async function createItemReview(review: z.infer<typeof createReviewSchema>) {
       rating: review.rating,
       description: review.description,
     })
+    revalidatePath('/requests')
     return null
   } catch (error) {
     console.error('Error at createItemReview', error)

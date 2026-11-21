@@ -4,6 +4,7 @@ import { db } from '@/db'
 import { notifications } from '@/db/schema/notifications'
 import { auth } from '@/lib/auth/server'
 import { and, eq } from 'drizzle-orm'
+import { revalidatePath } from 'next/cache'
 
 export async function sendNotification(
   userId: string,
@@ -35,6 +36,7 @@ export async function markNotificationAsRead(
       .update(notifications)
       .set({ isRead: true })
       .where(and(eq(notifications.id, notificationId), eq(notifications.userId, session.user.id)))
+    revalidatePath('/')
     return { success: true }
   } catch (error) {
     console.error('Error at markNotificationAsRead', error)

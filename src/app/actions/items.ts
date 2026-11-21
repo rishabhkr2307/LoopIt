@@ -8,6 +8,7 @@ import { files } from '@/lib/storage/upload'
 import { createItemSchema, editItemSchema } from '@/schema/items'
 import { randomUUID } from 'crypto'
 import { and, asc, avg, count, desc, eq, gte, inArray, sql } from 'drizzle-orm'
+import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 
 export async function createItem(_prevState: { error: string } | null, formData: FormData) {
@@ -61,6 +62,7 @@ export async function createItem(_prevState: { error: string } | null, formData:
       ownerId: profile.userId,
       imageUrl,
     })
+    revalidatePath('/owner/profile')
   } catch (error) {
     console.error('Error at createItem', error)
     return { error: 'Something went wrong' }
@@ -131,6 +133,7 @@ export async function editItem(_prevState: { error: string } | null, formData: F
         imageUrl,
       })
       .where(eq(items.id, data.item_id))
+    revalidatePath('/owner/profile')
   } catch (error) {
     console.error('Error at editItem', error)
     return { error: 'Something went wrong' }
@@ -154,6 +157,7 @@ export async function deleteItemById(
       }
     }
     await db.delete(items).where(and(eq(items.id, itemId), eq(items.ownerId, data.user.id)))
+    revalidatePath('/owner/profile')
     return { success: true }
   } catch (error) {
     console.error('Error at deleteItemById', error)
@@ -180,6 +184,7 @@ export async function archiveItemById(
       .update(items)
       .set({ itemStatus: 'archived' })
       .where(and(eq(items.id, itemId), eq(items.ownerId, data.user.id)))
+    revalidatePath('/owner/profile')
     return { success: true }
   } catch (error) {
     console.error('Error at archiveItemById', error)
