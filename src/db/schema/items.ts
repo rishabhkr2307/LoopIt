@@ -17,7 +17,8 @@ export const items = pgTable(
     imageUrl: t.text('image_url').notNull(),
     itemCategory: itemCategory('item_category').notNull(),
     itemStatus: itemStatus('item_status').default('available'),
-    cityId: t.uuid('city_id').references(() => cities.id),
+    cityName: t.text('city_name').notNull(),
+    pincode: t.text('pincode').notNull(),
     pricePerDay: t.integer('price_per_day').default(0).notNull(),
     pricePerWeek: t.integer('price_per_week').default(0).notNull(),
     pricePerMonth: t.integer('price_per_month').default(0).notNull(),
@@ -29,7 +30,8 @@ export const items = pgTable(
   }),
   (table) => [
     index('owner_id_idx').on(table.ownerId),
-    index('city_id_idx').on(table.cityId),
+    index('items_city_name_idx').on(table.cityName),
+    index('items_pincode_idx').on(table.pincode),
     index('items_search_idx').using(
       'gin',
       sql`(

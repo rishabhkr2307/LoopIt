@@ -36,9 +36,10 @@ export async function createItem(_prevState: { error: string } | null, formData:
       where: {
         userId: session.user.id,
       },
+      with: { city: true },
     })
 
-    if (!profile) {
+    if (!profile || !profile.city) {
       return { error: 'You should have a profile first.' }
     }
     const filename = `${randomUUID()}-${data.image.name}`
@@ -55,7 +56,8 @@ export async function createItem(_prevState: { error: string } | null, formData:
       pricePerDay: data.pricePerDay,
       pricePerWeek: data.pricePerWeek,
       pricePerMonth: data.pricePerMonth,
-      cityId: profile.cityId,
+      cityName: profile.city.name,
+      pincode: profile.city.pincode,
       ownerId: profile.userId,
       imageUrl,
     })
@@ -94,9 +96,10 @@ export async function editItem(_prevState: { error: string } | null, formData: F
       where: {
         userId: session.user.id,
       },
+      with: { city: true },
     })
 
-    if (!profile) {
+    if (!profile || !profile.city) {
       return { error: 'You should have a profile first.' }
     }
     const item = await db.query.items.findFirst({ where: { id: data.item_id } })
@@ -122,7 +125,8 @@ export async function editItem(_prevState: { error: string } | null, formData: F
         pricePerDay: data.pricePerDay,
         pricePerWeek: data.pricePerWeek,
         pricePerMonth: data.pricePerMonth,
-        cityId: profile.cityId,
+        cityName: profile.city.name,
+        pincode: profile.city.pincode,
         ownerId: profile.userId,
         imageUrl,
       })
@@ -185,7 +189,7 @@ export async function archiveItemById(
 
 export async function getItemsWithFilters(filters: {
   category?: string
-  cityId?: string
+  cityName?: string
   orderByTime?: 'asc' | 'desc'
   orderByPrice?: 'asc' | 'desc'
   searchQ?: string
@@ -240,7 +244,7 @@ export async function getItemsWithFilters(filters: {
       .having(gte(avg(reviews.rating), Number(filters.aboveRating)))
 
     const conditions = [
-      filters.cityId ? eq(items.cityId, filters.cityId) : undefined,
+      filters.cityName ? eq(items.cityName, filters.cityName) : undefined,
 
       filters.category
         ? eq(items.itemCategory, filters.category as (typeof itemCategory.enumValues)[number])

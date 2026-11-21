@@ -8,7 +8,7 @@ export const createProfileSchema = z.object({
     .optional(),
   bio: z.string(),
   city: z.string().min(1, 'City is required'),
-  pincode: z.coerce.number().positive(),
+  pincode: z.string(),
 })
 
 export const editProfileSchema = z.object({
@@ -19,6 +19,6 @@ export const editProfileSchema = z.object({
     .optional(),
   bio: z.string(),
   city: z.string().min(1, 'City is required'),
-  pincode: z.coerce.number().positive(),
+  pincode: z.string(),
   profileId: z.uuid(),
 })

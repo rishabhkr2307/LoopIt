@@ -6,8 +6,11 @@ import { ScrollArea } from './ui/scroll-area'
 import { Checkbox } from './ui/checkbox'
 import { useQueryState } from 'nuqs'
 import { FilterSection } from './filter-section'
-import { CreateItemDialog } from './create-item-dialog'
-import { itemCategories, itemPricing, itemTimings, popularCities } from '@/constants'
+import { itemCategories, itemPricing, itemTimings } from '@/constants'
+import {
+  GeoapifyContext,
+  GeoapifyGeocoderAutocomplete,
+} from '@geoapify/react-geocoder-autocomplete'
 
 export function SidebarFilters() {
   const [showMobileFilters, setShowMobileFilters] = useState(false)
@@ -20,14 +23,23 @@ export function SidebarFilters() {
   const [orderByTiming, setOrderByTiming] = useQueryState('orderByTime', {
     shallow: false,
   })
-  const [popCityId, setPopCityId] = useQueryState('cityId', {
-    shallow: false,
-  })
   const [aboveRating, setAboveRating] = useQueryState('aboveRating', {
     shallow: false,
   })
-  const activeFilters =
-    category || orderByPrice || orderByTiming || popCityId || aboveRating ? 1 : 0
+
+  const [city, setCity] = useQueryState('cityName', {
+    shallow: false,
+  })
+
+  // @ts-expect-error Geoapify does not provide a type for feature
+  const onPlaceSelected = (feature) => {
+    const p = feature?.properties
+
+    const city =
+      p?.city || p?.town || p?.village || p?.state_district || p?.district || p?.county || ''
+    setCity(city)
+  }
+  const activeFilters = category || orderByPrice || orderByTiming || city || aboveRating ? 1 : 0
 
   const toggleCategory = (category: string) => {
     setCategory((prev) => (prev == category ? null : category))
@@ -38,9 +50,6 @@ export function SidebarFilters() {
   const toggleOrderByTiming = (order: string) => {
     setOrderByTiming((prev) => (prev == order ? null : order))
   }
-  const togglePopCityId = (cityId: string) => {
-    setPopCityId((prev) => (prev == cityId ? null : cityId))
-  }
 
   const toggleAboveRating = (rating: string) => {
     setAboveRating((prev) => (prev == rating ? null : rating))
@@ -50,8 +59,8 @@ export function SidebarFilters() {
     setCategory(null)
     setOrderByPrice(null)
     setOrderByTiming(null)
-    setPopCityId(null)
     setAboveRating(null)
+    setCity(null)
   }
 
   const ratings = [4, 3, 2, 1]
@@ -120,6 +129,17 @@ export function SidebarFilters() {
   function FilterContent() {
     return (
       <div className="space-y-1">
+        <FilterSection title="Search for places">
+          <GeoapifyContext apiKey={process.env.NEXT_PUBLIC_GEOAPIFY_API_KEY}>
+            <GeoapifyGeocoderAutocomplete
+              placeholder="Delhi"
+              lang="en"
+              limit={8}
+              addDetails={true}
+              placeSelect={onPlaceSelected}
+            />
+          </GeoapifyContext>
+        </FilterSection>
         <FilterSection title="Categories">
           <div className="space-y-2">
             {itemCategories.map((item) => (
@@ -179,26 +199,6 @@ export function SidebarFilters() {
           </div>
         </FilterSection>
 
-        <FilterSection title="Popular Cities">
-          <div className="space-y-2">
-            {popularCities.map((city) => (
-              <div key={city.value} className="flex items-center space-x-2">
-                <Checkbox
-                  id={`popCityId-${city.value}`}
-                  checked={popCityId == city.value}
-                  onCheckedChange={() => togglePopCityId(city.value)}
-                />
-                <label
-                  htmlFor={`popCityId-${popCityId}`}
-                  className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                >
-                  {city.label}
-                </label>
-              </div>
-            ))}
-          </div>
-        </FilterSection>
-
         <FilterSection title="Rating">
           <div className="space-y-2">
             {ratings.map((rating) => (
@@ -226,9 +226,6 @@ export function SidebarFilters() {
               </div>
             ))}
           </div>
-        </FilterSection>
-        <FilterSection title="Lend Your Item">
-          <CreateItemDialog />
         </FilterSection>
       </div>
     )

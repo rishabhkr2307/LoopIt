@@ -14,11 +14,30 @@ import { Field, FieldGroup } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from './ui/textarea'
-import { useActionState } from 'react'
+import { useActionState, useState } from 'react'
 import { createProfile } from '@/app/actions/profile'
+import '@geoapify/geocoder-autocomplete/styles/minimal.css'
+import {
+  GeoapifyContext,
+  GeoapifyGeocoderAutocomplete,
+} from '@geoapify/react-geocoder-autocomplete'
 
 export function CreateProfileDialog({ open }: { open: boolean }) {
   const [state, formAction, isPending] = useActionState(createProfile, null)
+  const [city, setCity] = useState('')
+  const [pincode, setPincode] = useState('')
+
+  // @ts-expect-error Geoapify does not provide a type for feature
+  const onPlaceSelected = (feature) => {
+    const p = feature?.properties
+
+    const city =
+      p?.city || p?.town || p?.village || p?.state_district || p?.district || p?.county || ''
+    setCity(city)
+
+    const pincode = p?.postcode || ''
+    setPincode(pincode)
+  }
 
   return (
     <Dialog open={open}>
@@ -50,16 +69,23 @@ export function CreateProfileDialog({ open }: { open: boolean }) {
               />
             </Field>
             <Field>
-              <Label htmlFor="name">City</Label>
-              <Input id="city" name="city" type="text" placeholder="Delhi" required />
-            </Field>
-            <Field>
-              <Label htmlFor="pincode">Pincode</Label>
-              <Input id="pincode" name="pincode" type="number" placeholder="110001" required />
+              <Label htmlFor="name">Pincode</Label>
+              <GeoapifyContext apiKey={process.env.NEXT_PUBLIC_GEOAPIFY_API_KEY}>
+                <GeoapifyGeocoderAutocomplete
+                  placeholder="Search for an address"
+                  lang="en"
+                  limit={8}
+                  addDetails={true}
+                  placeSelect={onPlaceSelected}
+                  type="postcode"
+                />
+              </GeoapifyContext>
             </Field>
             {state?.error && (
               <div className="rounded-md py-2 text-sm text-red-500">{state.error}</div>
             )}
+            <Input id="city" name="city" hidden type="text" value={city} />
+            <Input id="pincode" name="pincode" hidden type="text" value={pincode} />
           </FieldGroup>
           <DialogFooter>
             <DialogClose render={<Button variant="outline">Cancel</Button>} />

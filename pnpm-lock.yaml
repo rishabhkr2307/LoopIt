@@ -232,6 +232,12 @@ importers:
       '@dnd-kit/utilities':
         specifier: ^3.2.2
         version: 3.2.2(react@19.3.0)
+      '@geoapify/geocoder-autocomplete':
+        specifier: ^3.1.0
+        version: 3.1.0
+      '@geoapify/react-geocoder-autocomplete':
+        specifier: ^3.1.0
+        version: 3.1.0(@geoapify/geocoder-autocomplete@3.1.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@neon/auth':
         specifier: ^0.8.2
         version: 0.8.2(drizzle-kit@1.0.0-rc.5(drizzle-orm@1.0.0-rc.5(@neondatabase/serverless@1.2.0)(zod@4.6.7)))(drizzle-orm@1.0.0-rc.5(@neondatabase/serverless@1.2.0)(zod@4.6.7))(kysely@0.29.8)(nanostores@1.5.5)(next@16.4.5(@babel/core@7.29.13(supports-color@7.2.0))(@types/node@20.19.43)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
@@ -787,6 +793,17 @@ packages:
 
   '@floating-ui/utils@0.2.12':
     resolution: {integrity: sha512-HpCo8tmWzLVad5s2d19EhAz5zqrrQ6s69qd6moPMQvkOuSwDT1YgRfWSVuc4ennqrgv3OHppiOGMQ7oC13yIww==}
+
+  '@geoapify/geocoder-autocomplete@3.1.0':
+    resolution: {integrity: sha512-DtOElB0kA8VBdPrjvnWFKNnA+zPDTgfikNjZPd1GRAOHmLDu0A1jQnjpSiGVOrVT00BL0P1/X3FKJUc4YWmQZw==}
+
+  '@geoapify/react-geocoder-autocomplete@3.1.0':
+    resolution: {integrity: sha512-xMlXHsfMj2+dbxWSNVguNFUIxNM/zsNvexqs3HSA/pNdXLJRL6hKY+cmODPDTaa71rRVWJZOQMf49Vmfan00Ng==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      '@geoapify/geocoder-autocomplete': ^3.1.0
+      react: ^19.0.0
+      react-dom: ^19.0.0
 
   '@hono/node-server@2.1.6':
     resolution: {integrity: sha512-p/KH9MnfNcsm3sR6x4lNgm5j+QN4Et8srKredl9DZfXiyZ1UQ3aQ2YVpFLbqktYN5JI+DB+VZFKM2PqE5hLKjQ==}
@@ -5732,6 +5749,14 @@ snapshots:
       react-dom: 19.3.0(react@19.3.0)
 
   '@floating-ui/utils@0.2.12': {}
+
+  '@geoapify/geocoder-autocomplete@3.1.0': {}
+
+  '@geoapify/react-geocoder-autocomplete@3.1.0(@geoapify/geocoder-autocomplete@3.1.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
+    dependencies:
+      '@geoapify/geocoder-autocomplete': 3.1.0
+      react: 19.3.0
+      react-dom: 19.3.0(react@19.3.0)
 
   '@hono/node-server@2.1.6(hono@4.13.17)':
     dependencies:

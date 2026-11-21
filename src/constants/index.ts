@@ -31,13 +31,6 @@ export const itemTimings = [
   { label: 'Newest First', value: 'desc' },
   { label: 'Oldest First', value: 'asc' },
 ] as const
-export const popularCities = [
-  { label: 'Banglore', value: '8578b136-d0ad-4dcb-a279-d44761dc3560' },
-  { label: 'Delhi', value: 'ee91a6ec-df03-401a-a7a2-aae39675278e' },
-  { label: 'Chennai', value: 'e8b9d140-93f9-42bf-b8a4-557f02f19564' },
-  { label: 'Kolkata', value: '057a4d79-b384-40c4-8cd0-1cd9bf466f08' },
-  { label: 'Bilaspur', value: 'db1b08a9-8ee4-44b8-80d4-e80611a67a03' },
-] as const
 
 export const reviewType = [
   { label: 'Item', value: 'item' },
