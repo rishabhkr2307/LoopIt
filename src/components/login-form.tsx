@@ -20,15 +20,16 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
           <form action={formAction}>
             <FieldGroup>
               <Field>
-                <FieldLabel htmlFor="email">Email</FieldLabel>
+                <FieldLabel htmlFor="email" className="gap-0">
+                  Email<span className="text-red-500">*</span>
+                </FieldLabel>
                 <Input id="email" name="email" type="email" placeholder="m@example.com" required />
               </Field>
               <Field>
                 <div className="flex items-center">
-                  <FieldLabel htmlFor="password">Password</FieldLabel>
-                  <a href="#" className="ml-auto text-sm underline-offset-4 hover:underline">
-                    Forgot your password?
-                  </a>
+                  <FieldLabel htmlFor="password" className="gap-0">
+                    Password<span className="text-red-500">*</span>
+                  </FieldLabel>
                 </div>
                 <Input id="password" name="password" type="password" required />
               </Field>

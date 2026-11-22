@@ -69,7 +69,9 @@ export function CreateProfileDialog({ open }: { open: boolean }) {
               />
             </Field>
             <Field>
-              <Label htmlFor="name">Pincode</Label>
+              <Label htmlFor="name" className="gap-0">
+                Pincode<span className="text-red-500">*</span>
+              </Label>
               <GeoapifyContext apiKey={process.env.NEXT_PUBLIC_GEOAPIFY_API_KEY}>
                 <GeoapifyGeocoderAutocomplete
                   placeholder="Search for an address"

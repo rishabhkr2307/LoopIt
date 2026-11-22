@@ -20,18 +20,24 @@ export function SignupForm({ className, ...props }: React.ComponentProps<'div'>)
           <form action={formAction}>
             <FieldGroup>
               <Field>
-                <FieldLabel htmlFor="name">Full Name</FieldLabel>
+                <FieldLabel htmlFor="name" className="gap-0">
+                  Full Name<span className="text-red-500">*</span>
+                </FieldLabel>
                 <Input id="name" name="name" type="text" placeholder="John Doe" required />
               </Field>
               <Field>
-                <FieldLabel htmlFor="email">Email</FieldLabel>
+                <FieldLabel htmlFor="email" className="gap-0">
+                  Email<span className="text-red-500">*</span>
+                </FieldLabel>
                 <Input id="email" name="email" type="email" placeholder="m@example.com" required />
               </Field>
               <Field>
                 <Field className="grid grid-cols-1">
                   <Field>
-                    <FieldLabel htmlFor="password">Password</FieldLabel>
-                    <Input id="password" name="password" type="password" required />
+                    <FieldLabel htmlFor="password" className="gap-0">
+                      Password<span className="text-red-500">*</span>
+                    </FieldLabel>
+                    <Input id="password" name="password" type="password" required minLength={8} />
                   </Field>
                 </Field>
                 <FieldDescription>Must be at least 8 characters long.</FieldDescription>

@@ -135,7 +135,9 @@ export function ViewItemDialog({
                 </Field>
 
                 <Field>
-                  <Label htmlFor="duration">Duration</Label>
+                  <Label htmlFor="duration" className="gap-0">
+                    Duration<span className="text-red-500">*</span>
+                  </Label>
                   <Input
                     id="duration"
                     name="duration"

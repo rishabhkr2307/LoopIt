@@ -58,7 +58,9 @@ export function InputOTPForm() {
           </CardHeader>
           <CardContent>
             <Field>
-              <FieldLabel htmlFor="otp-verification">Verification code</FieldLabel>
+              <FieldLabel htmlFor="otp-verification" className="gap-0">
+                Verification code<span className="text-red-500">*</span>
+              </FieldLabel>
               <InputOTP maxLength={6} id="otp-verification" required value={otp} onChange={setOtp}>
                 <InputOTPGroup className="*:data-[slot=input-otp-slot]:h-12 *:data-[slot=input-otp-slot]:w-11 *:data-[slot=input-otp-slot]:text-xl">
                   <InputOTPSlot index={0} />

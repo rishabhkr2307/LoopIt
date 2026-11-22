@@ -48,15 +48,22 @@ export function CreateItemDialog() {
           </DialogHeader>
           <FieldGroup>
             <Field>
-              <Label htmlFor="image">Image</Label>
+              <Label htmlFor="image" className="gap-0">
+                Image
+                <span className="text-red-500">*</span>
+              </Label>
               <Input id="image" name="image" type="file" accept="image/*" required />
             </Field>
             <Field>
-              <Label htmlFor="name">Name</Label>
+              <Label htmlFor="name" className="gap-0">
+                Name<span className="text-red-500">*</span>
+              </Label>
               <Input id="name" name="name" required />
             </Field>
             <Field>
-              <Label htmlFor="description">Description</Label>
+              <Label htmlFor="description" className="gap-0">
+                Description <span className="text-red-500">*</span>{' '}
+              </Label>
               <Textarea
                 className="max-h-32 resize-none overflow-y-auto"
                 id="description"
@@ -65,7 +72,9 @@ export function CreateItemDialog() {
               />
             </Field>
             <Field>
-              <FieldLabel htmlFor="category">Category</FieldLabel>
+              <FieldLabel htmlFor="category" className="gap-0">
+                Category<span className="text-red-500">*</span>
+              </FieldLabel>
               <Select
                 items={itemCategories}
                 value={category}
