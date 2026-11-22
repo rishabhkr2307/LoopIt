@@ -218,6 +218,7 @@ export async function getItemsWithFilters(filters: {
       where: {
         userId: session.user.id,
       },
+      with: { city: true },
     })
 
     if (!profile) {
@@ -247,7 +248,9 @@ export async function getItemsWithFilters(filters: {
       .having(gte(avg(reviews.rating), Number(filters.aboveRating)))
 
     const conditions = [
-      filters.cityName ? eq(items.cityName, filters.cityName) : undefined,
+      filters.cityName
+        ? eq(items.cityName, filters.cityName)
+        : eq(items.cityName, profile.city!.name),
 
       filters.category
         ? eq(items.itemCategory, filters.category as (typeof itemCategory.enumValues)[number])
