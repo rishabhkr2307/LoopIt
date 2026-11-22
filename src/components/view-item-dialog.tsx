@@ -9,9 +9,9 @@ import {
 } from '@/components/ui/dialog'
 import { itemCategories, requestDurationType } from '@/constants'
 import { Item } from '@/db/schema/items'
-import { PlusIcon, StarIcon } from '@phosphor-icons/react'
+import { StarIcon } from '@phosphor-icons/react'
 import Image from 'next/image'
-import { useActionState, useState } from 'react'
+import { Dispatch, SetStateAction, useActionState, useState } from 'react'
 import { createRentalRequest } from '@/app/actions/requests'
 import { Field, FieldGroup, FieldLabel } from './ui/field'
 import {
@@ -27,10 +27,14 @@ import { Input } from './ui/input'
 import { Textarea } from './ui/textarea'
 
 export function ViewItemDialog({
+  open,
+  setOpen,
   item,
   avgRating,
   totalReviews,
 }: {
+  open: boolean
+  setOpen: Dispatch<SetStateAction<boolean>>
   item: Item
   avgRating: string | null
   totalReviews: number
@@ -38,15 +42,8 @@ export function ViewItemDialog({
   const [state, formAction, isPending] = useActionState(createRentalRequest, null)
   const [type, setType] = useState('days')
   return (
-    <Dialog>
-      <DialogTrigger
-        render={
-          <Button size="sm" className="h-8">
-            <PlusIcon className="mr-2 h-4 w-4" />
-            More
-          </Button>
-        }
-      />
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger hidden />
       <DialogContent className="sm:max-w-2xl" showCloseButton={false}>
         <form action={formAction}>
           <div className="grid gap-2 grid-cols-1 md:grid-cols-2">
@@ -161,7 +158,13 @@ export function ViewItemDialog({
           </div>
 
           <DialogFooter>
-            <DialogClose render={<Button variant="outline">Cancel</Button>} />
+            <DialogClose
+              render={
+                <Button variant="outline" onClick={() => setOpen(false)}>
+                  Cancel
+                </Button>
+              }
+            />
             <Button type="submit" disabled={isPending}>
               Request
             </Button>
