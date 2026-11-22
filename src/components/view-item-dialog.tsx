@@ -146,7 +146,7 @@ export function ViewItemDialog({
                   <Input
                     id="duration"
                     name="duration"
-                    placeholder="e.g. 12"
+                    placeholder={`e.g. 12 ${type}`}
                     min={1}
                     type="number"
                     required
