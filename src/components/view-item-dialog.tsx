@@ -82,24 +82,21 @@ export function ViewItemDialog({
                     <span className="text-muted-foreground text-sm ">{item.description}</span>
                   </div>
                   <div className="mt-4 flex items-center justify-between">
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-col items-center">
                       <span className="font-medium">${item.pricePerDay}</span>
                       <span className="text-muted-foreground text-sm">Per Day</span>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-col items-center">
                       <span className="font-medium">${item.pricePerWeek}</span>
                       <span className="text-muted-foreground text-sm">Per Week</span>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-col items-center">
                       <span className="font-medium">${item.pricePerMonth}</span>
                       <span className="text-muted-foreground text-sm">Per Month</span>
                     </div>
                   </div>
                 </div>
               </div>
-              <span className="text-muted-foreground text-sm text-right italic">
-                You can negotiate after rental request approval
-              </span>
             </div>
 
             <div className="col-span-1">
@@ -152,6 +149,10 @@ export function ViewItemDialog({
                 {state?.error && (
                   <div className="rounded-md py-2 text-sm text-red-500">{state.error}</div>
                 )}
+
+                <span className="text-muted-foreground text-sm text-right italic">
+                  You can negotiate after rental request approval
+                </span>
               </FieldGroup>
             </div>
           </div>
