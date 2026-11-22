@@ -31,7 +31,7 @@ export function SidebarFilters({ city: userCity }: { city: City | null }) {
   const [city, setCity] = useQueryState('cityName', {
     shallow: false,
   })
-
+  const [location, setLocation] = useState(city)
   // @ts-expect-error Geoapify does not provide a type for feature
   const onPlaceSelected = (feature) => {
     const p = feature?.properties
@@ -39,6 +39,7 @@ export function SidebarFilters({ city: userCity }: { city: City | null }) {
     const city =
       p?.city || p?.town || p?.village || p?.state_district || p?.district || p?.county || ''
     setCity(city)
+    setLocation(p?.formatted ?? '')
   }
   const activeFilters = category || orderByPrice || orderByTiming || city || aboveRating ? 1 : 0
 
@@ -62,6 +63,7 @@ export function SidebarFilters({ city: userCity }: { city: City | null }) {
     setOrderByTiming(null)
     setAboveRating(null)
     setCity(null)
+    setLocation('')
   }
 
   const ratings = [4, 3, 2, 1]
@@ -138,6 +140,11 @@ export function SidebarFilters({ city: userCity }: { city: City | null }) {
               limit={8}
               addDetails={true}
               placeSelect={onPlaceSelected}
+              onClear={() => {
+                setCity(null)
+                setLocation('')
+              }}
+              value={location ?? ''}
             />
           </GeoapifyContext>
         </FilterSection>
