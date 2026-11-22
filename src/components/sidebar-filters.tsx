@@ -11,8 +11,9 @@ import {
   GeoapifyContext,
   GeoapifyGeocoderAutocomplete,
 } from '@geoapify/react-geocoder-autocomplete'
+import { City } from '@/db/schema/cities'
 
-export function SidebarFilters() {
+export function SidebarFilters({ city: userCity }: { city: City | null }) {
   const [showMobileFilters, setShowMobileFilters] = useState(false)
   const [category, setCategory] = useQueryState('category', {
     shallow: false,
@@ -129,10 +130,10 @@ export function SidebarFilters() {
   function FilterContent() {
     return (
       <div className="space-y-1">
-        <FilterSection title="Search for places">
+        <FilterSection title="Search City">
           <GeoapifyContext apiKey={process.env.NEXT_PUBLIC_GEOAPIFY_API_KEY}>
             <GeoapifyGeocoderAutocomplete
-              placeholder="Delhi"
+              placeholder={`e.g. ${userCity?.name || 'London'}`}
               lang="en"
               limit={8}
               addDetails={true}

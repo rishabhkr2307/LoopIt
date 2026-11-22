@@ -5,15 +5,18 @@ import { Item } from '@/db/schema/items'
 import { Navbar } from './navbar'
 import { Profile } from '@/db/schema/profiles'
 import { Notification } from '@/db/schema/notifications'
+import { City } from '@/db/schema/cities'
 
 export default function FilterPage({
   items,
   profile,
+  city,
   reviewInfo,
   notifications,
 }: {
   items: Item[]
   profile: Profile
+  city: City | null
   reviewInfo: {
     itemId: string | null
     avgRating: string | null
@@ -26,7 +29,7 @@ export default function FilterPage({
       <Navbar profile={profile} isHome notifications={notifications} />
       <div className="flex flex-col gap-8 lg:flex-row">
         {/* Sidebar Filters */}
-        <SidebarFilters />
+        <SidebarFilters city={city} />
 
         {/* Item Grid */}
         <div className="flex-1">

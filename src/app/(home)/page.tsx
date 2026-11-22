@@ -14,6 +14,7 @@ export default async function Home({ searchParams }: { searchParams: SearchParam
   const profile = await db.query.profiles.findFirst({
     where: { userId: session?.user.id },
     with: {
+      city: true,
       notifications: {
         where: { isRead: false },
         limit: 10,
@@ -32,6 +33,7 @@ export default async function Home({ searchParams }: { searchParams: SearchParam
     <FilterPage
       items={data?.items ?? []}
       profile={profile}
+      city={profile.city}
       reviewInfo={data?.reviewInfo ?? []}
       notifications={profile.notifications}
     />
