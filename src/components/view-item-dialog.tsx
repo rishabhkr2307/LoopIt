@@ -11,7 +11,7 @@ import { itemCategories, requestDurationType } from '@/constants'
 import { Item } from '@/db/schema/items'
 import { StarIcon } from '@phosphor-icons/react'
 import Image from 'next/image'
-import { Dispatch, SetStateAction, useActionState, useState } from 'react'
+import { Dispatch, SetStateAction, useActionState, useEffect, useState } from 'react'
 import { createRentalRequest } from '@/app/actions/requests'
 import { Field, FieldGroup, FieldLabel } from './ui/field'
 import {
@@ -25,6 +25,7 @@ import {
 import { Label } from './ui/label'
 import { Input } from './ui/input'
 import { Textarea } from './ui/textarea'
+import { toast } from 'sonner'
 
 export function ViewItemDialog({
   open,
@@ -41,6 +42,13 @@ export function ViewItemDialog({
 }) {
   const [state, formAction, isPending] = useActionState(createRentalRequest, null)
   const [type, setType] = useState('days')
+
+  useEffect(() => {
+    if (state?.success) {
+      toast.success('Your request is created successfully')
+      setOpen(false)
+    }
+  }, [state?.success, setOpen])
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger hidden />

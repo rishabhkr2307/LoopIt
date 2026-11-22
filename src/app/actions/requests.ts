@@ -8,10 +8,9 @@ import { auth } from '@/lib/auth/server'
 import { createRequestSchema } from '@/schema/request'
 import { eq } from 'drizzle-orm'
 import { revalidatePath } from 'next/cache'
-import { redirect } from 'next/navigation'
 
 export async function createRentalRequest(
-  _prevState: { error: string } | null,
+  _prevState: { error?: string; success?: boolean } | null,
   formData: FormData,
 ) {
   const { success, data, error } = createRequestSchema.safeParse({
@@ -51,11 +50,11 @@ export async function createRentalRequest(
       duration: data.duration,
       message: data.message,
     })
+    return { success: true }
   } catch (error) {
     console.error('Error at createRentalRequest', error)
     return { error: 'Something went wrong' }
   }
-  redirect('/')
 }
 
 export async function approveRentalRequest(
