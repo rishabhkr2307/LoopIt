@@ -6,7 +6,10 @@ import { createReviewSchema } from '@/schema/review'
 import { revalidatePath } from 'next/cache'
 import * as z from 'zod'
 
-export async function createReview(_prevState: { error: string } | null, formData: FormData) {
+export async function createReview(
+  _prevState: { error?: string; success?: boolean } | null,
+  formData: FormData,
+) {
   const { success, data, error } = createReviewSchema.safeParse({
     reviewType: formData.get('review_type'),
     itemId: formData.get('item_id'),
@@ -72,7 +75,7 @@ async function createItemReview(review: z.infer<typeof createReviewSchema>) {
       description: review.description,
     })
     revalidatePath('/requests')
-    return null
+    return { success: true }
   } catch (error) {
     console.error('Error at createItemReview', error)
     return { error: 'Something went wrong' }
@@ -107,7 +110,7 @@ async function createBorrowerReview(review: z.infer<typeof createReviewSchema>) 
       rating: review.rating,
       description: review.description,
     })
-    return null
+    return { success: true }
   } catch (error) {
     console.error('Error at createBorrowerReview', error)
     return { error: 'Something went wrong' }
@@ -143,7 +146,7 @@ async function createOwnerReview(review: z.infer<typeof createReviewSchema>) {
       description: review.description,
     })
 
-    return null
+    return { success: true }
   } catch (error) {
     console.error('Error at createOwnerReview', error)
     return { error: 'Something went wrong' }

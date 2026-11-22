@@ -13,7 +13,7 @@ import { Field, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from './ui/textarea'
-import { Dispatch, SetStateAction, useActionState, useState } from 'react'
+import { Dispatch, SetStateAction, useActionState, useEffect, useState } from 'react'
 import {
   Select,
   SelectContent,
@@ -25,6 +25,7 @@ import {
 import { reviewType } from '@/constants'
 import { Request } from '@/db/schema/requests'
 import { createReview } from '@/app/actions/reviews'
+import { toast } from 'sonner'
 
 export function CreateReviewDialog({
   open,
@@ -37,6 +38,12 @@ export function CreateReviewDialog({
 }) {
   const [state, formAction, isPending] = useActionState(createReview, null)
   const [type, setType] = useState('item')
+  useEffect(() => {
+    if (state?.success) {
+      toast.success(`Your review for ${type} is created successfully`)
+      setOpen(false)
+    }
+  }, [state?.success, setOpen, type])
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
