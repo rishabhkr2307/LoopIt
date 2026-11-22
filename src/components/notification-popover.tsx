@@ -31,7 +31,7 @@ export function NotificationPopover({ notifications }: { notifications: Notifica
           </Button>
         }
       />
-      <PopoverContent className="w-80">
+      <PopoverContent className="w-80 md:mr-56">
         {notifications.length == 0 ? (
           <div>No Notifications</div>
         ) : (

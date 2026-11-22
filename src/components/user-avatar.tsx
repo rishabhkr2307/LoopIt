@@ -36,7 +36,7 @@ export function UserAvatar({ profile }: { profile: Profile }) {
           </Button>
         }
       />
-      <DropdownMenuContent className="w-40" align="start">
+      <DropdownMenuContent className="w-40" align="end">
         <DropdownMenuGroup>
           <DropdownMenuSub>
             <DropdownMenuSubTrigger>
