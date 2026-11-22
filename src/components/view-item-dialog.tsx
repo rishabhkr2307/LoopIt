@@ -129,7 +129,8 @@ export function ViewItemDialog({
                     className="max-h-32 resize-none overflow-y-auto"
                     id="message"
                     name="message"
-                    placeholder="(Optional)"
+                    placeholder="(Optional) Max 200 characters allowed"
+                    maxLength={200}
                   />
                 </Field>
 

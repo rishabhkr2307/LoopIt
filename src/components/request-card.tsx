@@ -125,11 +125,16 @@ function RequestCard({
             <p className="text-muted-foreground text-sm">Rental Request</p>
           </div>
         </div>
-
+        {request.message && (
+          <div className="flex flex-col mt-4">
+            <span>Message</span>
+            <span className="text-muted-foreground bg-muted italic text-sm">{request.message}</span>
+          </div>
+        )}
         <div className="mt-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="font-medium">${item.pricePerDay}</span>
-            <span className="text-muted-foreground text-sm">Per Day</span>
+          <div className="flex justify-center gap-1">
+            <span className="font-medium">{request.duration}</span>
+            <span className="text-muted-foreground">{request.durationType}</span>
           </div>
           {isOwner ? (
             <ButtonGroup>

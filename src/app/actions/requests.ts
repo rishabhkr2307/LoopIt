@@ -51,11 +51,11 @@ export async function createRentalRequest(
       duration: data.duration,
       message: data.message,
     })
-    redirect('/')
   } catch (error) {
     console.error('Error at createRentalRequest', error)
     return { error: 'Something went wrong' }
   }
+  redirect('/')
 }
 
 export async function approveRentalRequest(
