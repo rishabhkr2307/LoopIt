@@ -1,5 +1,5 @@
 'use client'
-import { ArchiveIcon, PlusIcon, StarIcon, TrashIcon } from '@phosphor-icons/react'
+import { ArchiveIcon, MapPinIcon, PlusIcon, StarIcon, TrashIcon } from '@phosphor-icons/react'
 import Image from 'next/image'
 import { Item } from '@/db/schema/items'
 import { ViewItemDialog } from './view-item-dialog'
@@ -85,6 +85,10 @@ export const ItemCard = ({
               <h3 className="font-medium max-w-32">{item.name}</h3>
               <p className="text-muted-foreground text-sm">
                 {itemCategories.filter((i) => i.value == item.itemCategory)[0].label}
+              </p>
+              <p className="flex items-center mt-2 gap-1 text-muted-foreground text-sm">
+                <MapPinIcon />
+                {item.cityName}
               </p>
             </div>
             <div className="flex flex-col items-end">

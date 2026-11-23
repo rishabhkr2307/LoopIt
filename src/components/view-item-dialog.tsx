@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/dialog'
 import { itemCategories, requestDurationType } from '@/constants'
 import { Item } from '@/db/schema/items'
-import { StarIcon } from '@phosphor-icons/react'
+import { MapPinIcon, StarIcon } from '@phosphor-icons/react'
 import Image from 'next/image'
 import { Dispatch, SetStateAction, useActionState, useEffect, useState } from 'react'
 import { createRentalRequest } from '@/app/actions/requests'
@@ -72,6 +72,10 @@ export function ViewItemDialog({
                       <h3 className="font-medium">{item.name}</h3>
                       <p className="text-muted-foreground text-sm">
                         {itemCategories.filter((i) => i.value == item.itemCategory)[0].label}
+                      </p>
+                      <p className="flex items-center mt-2 gap-1 text-muted-foreground text-sm">
+                        <MapPinIcon />
+                        {item.cityName}
                       </p>
                     </div>
                     <div className="text-right">
