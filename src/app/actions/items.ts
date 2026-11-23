@@ -1,4 +1,5 @@
 'use server'
+import { pageSize } from '@/constants'
 import { db } from '@/db'
 import { itemCategory } from '@/db/schema/enums'
 import { Item, items } from '@/db/schema/items'
@@ -197,6 +198,7 @@ export async function getItemsWithFilters(filters: {
   orderByPrice?: 'asc' | 'desc'
   searchQ?: string
   aboveRating?: '1' | '2' | '3' | '4'
+  page?: number
 }): Promise<{
   success: boolean
   error?: string
@@ -287,6 +289,8 @@ export async function getItemsWithFilters(filters: {
       .from(items)
       .where(and(...conditions, eq(items.itemStatus, 'available')))
       .orderBy(...orderBy)
+      .limit(pageSize)
+      .offset((filters.page ? filters.page - 1 : 0) * pageSize)
 
     const reviewInfo = await db
       .select({

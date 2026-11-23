@@ -43,3 +43,5 @@ export const requestDurationType = [
   { label: 'Weeks', value: 'weeks' },
   { label: 'Months', value: 'months' },
 ] as const
+
+export const pageSize = 12

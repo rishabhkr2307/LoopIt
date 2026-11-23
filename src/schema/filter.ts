@@ -15,12 +15,15 @@ export const filterSchema = z.object({
   orderByTime: orderByTimeEnum.optional().catch(undefined),
   searchQ: z.string().optional().catch(undefined),
   aboveRating: aboveRatingEnum.optional().catch(undefined),
+  page: z.coerce.number().positive().optional().catch(undefined),
 })
 
 export const profileFilterSchema = z.object({
   itemStatus: statusEnum.optional().catch(undefined),
+  page: z.coerce.number().positive().optional().catch(undefined),
 })
 
 export const requestsFilterSchema = z.object({
   requestStatus: requestStatusEnum.optional().catch(undefined),
+  page: z.coerce.number().positive().optional().catch(undefined),
 })

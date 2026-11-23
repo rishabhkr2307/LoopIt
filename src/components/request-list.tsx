@@ -5,6 +5,7 @@ import { Conversation } from '@/db/schema/conversations'
 import { Message } from '@/db/schema/messages'
 import RequestCard from './request-card'
 import RequestFilter from './request-filter'
+import Pagination from './pagination'
 
 function RequestList({
   requests,
@@ -36,6 +37,7 @@ function RequestList({
             ),
         )}
       </div>
+      <Pagination nextDisabled={requests.length < 12} />
     </div>
   )
 }

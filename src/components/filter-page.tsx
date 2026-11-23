@@ -6,6 +6,7 @@ import { Navbar } from './navbar'
 import { Profile } from '@/db/schema/profiles'
 import { Notification } from '@/db/schema/notifications'
 import { City } from '@/db/schema/cities'
+import Pagination from './pagination'
 
 export default function FilterPage({
   items,
@@ -56,6 +57,7 @@ export default function FilterPage({
               </p>
             </div>
           )}
+          <Pagination nextDisabled={items.length < 12} />
         </div>
       </div>
     </div>

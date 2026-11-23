@@ -1,17 +1,30 @@
 import { ItemCard } from '@/components/item-card'
 import { Navbar } from '@/components/navbar'
 import ProfileCard from '@/components/profile-card'
+import { pageSize } from '@/constants'
 import { db } from '@/db'
 import { City } from '@/db/schema/cities'
+import { profileFilterSchema } from '@/schema/filter'
 import { notFound } from 'next/navigation'
+type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>
 
-export default async function ProfilePage({ params }: { params: Promise<{ id: string }> }) {
+export default async function ProfilePage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ id: string }>
+  searchParams: SearchParams
+}) {
   const { id } = await params
+  const { page } = profileFilterSchema.parse(searchParams)
   const profile = await db.query.profiles.findFirst({
     where: { id },
     with: {
       items: {
         with: { reviews: true },
+        orderBy: (items, { desc }) => desc(items.createdAt),
+        limit: pageSize,
+        offset: page ? (page - 1) * pageSize : 0,
       },
       city: true,
       notifications: {

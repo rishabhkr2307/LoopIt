@@ -1,4 +1,5 @@
 import RequestList from '@/components/request-list'
+import { pageSize } from '@/constants'
 import { db } from '@/db'
 import { auth } from '@/lib/auth/server'
 import { requestsFilterSchema } from '@/schema/filter'
@@ -9,7 +10,7 @@ export const dynamic = 'force-dynamic'
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>
 
 export default async function OwnerRequestsPage({ searchParams }: { searchParams: SearchParams }) {
-  const { requestStatus } = requestsFilterSchema.parse(await searchParams)
+  const { requestStatus, page } = requestsFilterSchema.parse(await searchParams)
 
   const { data: session } = await auth.getSession()
   if (!session || !session.user) return <div>No session</div>
@@ -21,6 +22,9 @@ export default async function OwnerRequestsPage({ searchParams }: { searchParams
         with: { messages: true },
       },
     },
+    orderBy: (requests, { desc }) => desc(requests.createdAt),
+    limit: pageSize,
+    offset: page ? (page - 1) * pageSize : 0,
   })
   if (!requests) notFound()
   return <RequestList requests={requests} userId={session.user.id} isOwner />

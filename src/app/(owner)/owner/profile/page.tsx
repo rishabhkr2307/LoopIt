@@ -1,5 +1,7 @@
 import { ItemCard } from '@/components/item-card'
+import Pagination from '@/components/pagination'
 import ProfileFilter from '@/components/profile-filter'
+import { pageSize } from '@/constants'
 import { db } from '@/db'
 import { auth } from '@/lib/auth/server'
 import { profileFilterSchema } from '@/schema/filter'
@@ -10,13 +12,16 @@ export const dynamic = 'force-dynamic'
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>
 
 export default async function OwnerProfilePage({ searchParams }: { searchParams: SearchParams }) {
-  const { itemStatus } = profileFilterSchema.parse(await searchParams)
+  const { itemStatus, page } = profileFilterSchema.parse(await searchParams)
   const { data: session } = await auth.getSession()
   const profile = await db.query.profiles.findFirst({
     where: { userId: session?.user.id },
     with: {
       items: {
         where: itemStatus ? { itemStatus } : {},
+        orderBy: (items, { desc }) => desc(items.createdAt),
+        limit: pageSize,
+        offset: page ? (page - 1) * pageSize : 0,
         with: { reviews: true },
       },
     },
@@ -51,6 +56,8 @@ export default async function OwnerProfilePage({ searchParams }: { searchParams:
           <h3 className="text-lg font-medium">No items found</h3>
         </div>
       )}
+
+      <Pagination nextDisabled={profile.items.length < 12} />
     </div>
   )
 }
