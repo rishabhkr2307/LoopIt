@@ -40,7 +40,9 @@ export async function createReview(
   }
 }
 
-async function createItemReview(review: z.infer<typeof createReviewSchema>) {
+async function createItemReview(
+  review: z.infer<typeof createReviewSchema>,
+): Promise<{ error?: string; success?: boolean }> {
   try {
     const { data: session } = await auth.getSession()
     if (!session?.user) {
@@ -82,7 +84,9 @@ async function createItemReview(review: z.infer<typeof createReviewSchema>) {
   }
 }
 
-async function createBorrowerReview(review: z.infer<typeof createReviewSchema>) {
+async function createBorrowerReview(
+  review: z.infer<typeof createReviewSchema>,
+): Promise<{ error?: string; success?: boolean }> {
   try {
     const { data: session } = await auth.getSession()
     if (!session?.user) {
@@ -117,7 +121,9 @@ async function createBorrowerReview(review: z.infer<typeof createReviewSchema>) 
   }
 }
 
-async function createOwnerReview(review: z.infer<typeof createReviewSchema>) {
+async function createOwnerReview(
+  review: z.infer<typeof createReviewSchema>,
+): Promise<{ error?: string; success?: boolean }> {
   try {
     const { data: session } = await auth.getSession()
     if (!session?.user) {
