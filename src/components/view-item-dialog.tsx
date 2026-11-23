@@ -26,6 +26,7 @@ import { Label } from './ui/label'
 import { Input } from './ui/input'
 import { Textarea } from './ui/textarea'
 import { toast } from 'sonner'
+import Link from 'next/link'
 
 export function ViewItemDialog({
   open,
@@ -73,6 +74,9 @@ export function ViewItemDialog({
                       <p className="text-muted-foreground text-sm">
                         {itemCategories.filter((i) => i.value == item.itemCategory)[0].label}
                       </p>
+                      <Link href={`/profile/${item.ownerId}`} className="text-blue-500">
+                        Go to Owner
+                      </Link>
                       <p className="flex items-center mt-2 gap-1 text-muted-foreground text-sm">
                         <MapPinIcon />
                         {item.cityName}

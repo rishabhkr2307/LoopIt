@@ -1,5 +1,6 @@
 import { ItemCard } from '@/components/item-card'
 import { Navbar } from '@/components/navbar'
+import Pagination from '@/components/pagination'
 import ProfileCard from '@/components/profile-card'
 import { pageSize } from '@/constants'
 import { db } from '@/db'
@@ -16,9 +17,9 @@ export default async function ProfilePage({
   searchParams: SearchParams
 }) {
   const { id } = await params
-  const { page } = profileFilterSchema.parse(searchParams)
+  const { page } = profileFilterSchema.parse(await searchParams)
   const profile = await db.query.profiles.findFirst({
-    where: { id },
+    where: { userId: id },
     with: {
       items: {
         with: { reviews: true },
@@ -89,6 +90,7 @@ export default async function ProfilePage({
           )}
         </div>
       </div>
+      <Pagination nextDisabled={profile.items.length < 12} />
     </div>
   )
 }
