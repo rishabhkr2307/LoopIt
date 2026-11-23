@@ -4,7 +4,7 @@ import { Button } from './ui/button'
 import { XIcon } from '@phosphor-icons/react'
 import { ScrollArea } from './ui/scroll-area'
 import { Checkbox } from './ui/checkbox'
-import { useQueryState } from 'nuqs'
+import { parseAsArrayOf, parseAsString, useQueryState } from 'nuqs'
 import { FilterSection } from './filter-section'
 import { itemCategories, itemPricing, itemTimings } from '@/constants'
 import {
@@ -15,9 +15,12 @@ import { City } from '@/db/schema/cities'
 
 export function SidebarFilters({ city: userCity }: { city: City | null }) {
   const [showMobileFilters, setShowMobileFilters] = useState(false)
-  const [category, setCategory] = useQueryState('category', {
-    shallow: false,
-  })
+  const [category, setCategory] = useQueryState(
+    'category',
+    parseAsArrayOf(parseAsString).withDefault([]).withOptions({
+      shallow: false,
+    }),
+  )
   const [orderByPrice, setOrderByPrice] = useQueryState('orderByPrice', {
     shallow: false,
   })
@@ -44,8 +47,11 @@ export function SidebarFilters({ city: userCity }: { city: City | null }) {
   const activeFilters = category || orderByPrice || orderByTiming || city || aboveRating ? 1 : 0
 
   const toggleCategory = (category: string) => {
-    setCategory((prev) => (prev == category ? null : category))
+    setCategory((prev) =>
+      prev.find((c) => c === category) ? prev.filter((p) => p !== category) : [...prev, category],
+    )
   }
+
   const toggleOrderByPrice = (order: string) => {
     setOrderByPrice((prev) => (prev == order ? null : order))
   }
@@ -154,7 +160,7 @@ export function SidebarFilters({ city: userCity }: { city: City | null }) {
               <div key={item.value} className="flex items-center space-x-2">
                 <Checkbox
                   id={`category-${item.value}`}
-                  checked={category == item.value}
+                  checked={category.find((c) => c == item.value) != undefined}
                   onCheckedChange={() => toggleCategory(item.value)}
                 />
                 <label

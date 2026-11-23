@@ -192,7 +192,7 @@ export async function archiveItemById(
 }
 
 export async function getItemsWithFilters(filters: {
-  category?: string
+  category?: (typeof itemCategory.enumValues)[number][]
   cityName?: string
   orderByTime?: 'asc' | 'desc'
   orderByPrice?: 'asc' | 'desc'
@@ -254,9 +254,7 @@ export async function getItemsWithFilters(filters: {
         ? eq(items.cityName, filters.cityName)
         : eq(items.cityName, profile.city!.name),
 
-      filters.category
-        ? eq(items.itemCategory, filters.category as (typeof itemCategory.enumValues)[number])
-        : undefined,
+      filters.category ? inArray(items.itemCategory, filters.category) : undefined,
 
       filters.aboveRating ? inArray(items.id, ratingsSubQuery) : undefined,
 

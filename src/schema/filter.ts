@@ -9,7 +9,13 @@ import {
 } from './enums'
 
 export const filterSchema = z.object({
-  category: categoryEnum.optional().catch(undefined),
+  category: z
+    .preprocess(
+      (val) => (typeof val === 'string' ? val.split(',').filter(Boolean) : val),
+      z.array(categoryEnum),
+    )
+    .optional()
+    .catch(undefined),
   cityName: z.string().optional().catch(undefined),
   orderByPrice: orderByPriceEnum.optional().catch(undefined),
   orderByTime: orderByTimeEnum.optional().catch(undefined),
