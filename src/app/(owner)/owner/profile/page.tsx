@@ -1,3 +1,4 @@
+import { EmptyState } from '@/components/empty-state'
 import { ItemCard } from '@/components/item-card'
 import Pagination from '@/components/pagination'
 import ProfileFilter from '@/components/profile-filter'
@@ -52,9 +53,7 @@ export default async function OwnerProfilePage({ searchParams }: { searchParams:
       </div>
 
       {profile.items.length === 0 && (
-        <div className="py-12 text-center">
-          <h3 className="text-lg font-medium">No items found</h3>
-        </div>
+        <EmptyState title="No items available" description="Currently no items are available " />
       )}
 
       <Pagination nextDisabled={profile.items.length < 12} />

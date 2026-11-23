@@ -7,6 +7,7 @@ import { Profile } from '@/db/schema/profiles'
 import { Notification } from '@/db/schema/notifications'
 import { City } from '@/db/schema/cities'
 import Pagination from './pagination'
+import { EmptyState } from './empty-state'
 
 export default function FilterPage({
   items,
@@ -50,12 +51,7 @@ export default function FilterPage({
           </div>
 
           {items.length === 0 && (
-            <div className="py-12 text-center">
-              <h3 className="text-lg font-medium">No items found</h3>
-              <p className="text-muted-foreground mt-1">
-                Try adjusting your filters to find what you&apos;re looking for.
-              </p>
-            </div>
+            <EmptyState title="No Items Available" description="Currently no items are available" />
           )}
           <Pagination nextDisabled={items.length < 12} />
         </div>

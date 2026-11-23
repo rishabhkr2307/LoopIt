@@ -6,6 +6,7 @@ import { Message } from '@/db/schema/messages'
 import RequestCard from './request-card'
 import RequestFilter from './request-filter'
 import Pagination from './pagination'
+import { EmptyState } from './empty-state'
 
 function RequestList({
   requests,
@@ -37,6 +38,12 @@ function RequestList({
             ),
         )}
       </div>
+      {requests.length === 0 && (
+        <EmptyState
+          title="No Requests Available"
+          description="Currently no requests are available"
+        />
+      )}
       <Pagination nextDisabled={requests.length < 12} />
     </div>
   )
