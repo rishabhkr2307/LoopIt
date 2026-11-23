@@ -8,6 +8,8 @@ import { Notification } from '@/db/schema/notifications'
 import { City } from '@/db/schema/cities'
 import Pagination from './pagination'
 import { EmptyState } from './empty-state'
+import { filterSchema } from '@/schema/filter'
+import * as z from 'zod'
 
 export default function FilterPage({
   items,
@@ -15,6 +17,7 @@ export default function FilterPage({
   city,
   reviewInfo,
   notifications,
+  filters,
 }: {
   items: Item[]
   profile: Profile
@@ -25,6 +28,7 @@ export default function FilterPage({
     totalReviews: number
   }[]
   notifications: Notification[]
+  filters: z.infer<typeof filterSchema>
 }) {
   return (
     <div className="mx-auto w-full max-w-7xl p-4 md:p-6">
@@ -51,7 +55,10 @@ export default function FilterPage({
           </div>
 
           {items.length === 0 && (
-            <EmptyState title="No Items Available" description="Currently no items are available" />
+            <EmptyState
+              title="No Items Available"
+              description={`Currently no items are available in ${filters.cityName || city?.name} ${filters.category && filters.category.length > 0 ? 'for selected categories' : ''}`}
+            />
           )}
           <Pagination nextDisabled={items.length < 12} />
         </div>

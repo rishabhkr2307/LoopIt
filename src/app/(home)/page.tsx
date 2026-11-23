@@ -36,6 +36,7 @@ export default async function Home({ searchParams }: { searchParams: SearchParam
       city={profile.city}
       reviewInfo={data?.reviewInfo ?? []}
       notifications={profile.notifications}
+      filters={filters}
     />
   )
 }
