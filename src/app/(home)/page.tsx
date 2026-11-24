@@ -4,6 +4,8 @@ import { getItemsWithFilters } from '@/app/actions/items'
 import { auth } from '@/lib/auth/server'
 import { db } from '@/db'
 import { filterSchema } from '@/schema/filter'
+import { sealNotifications } from '@/lib/realtime/notifications'
+import { redirect } from 'next/navigation'
 
 export const dynamic = 'force-dynamic'
 
@@ -15,12 +17,9 @@ export default async function Home({ searchParams }: { searchParams: SearchParam
     where: { userId: session?.user.id },
     with: {
       city: true,
-      notifications: {
-        where: { isRead: false },
-        limit: 10,
-      },
     },
   })
+  if (!session) redirect('/sign-in')
   const filters = filterSchema.parse(await searchParams)
   if (!profile)
     return (
@@ -28,6 +27,7 @@ export default async function Home({ searchParams }: { searchParams: SearchParam
         <CreateProfileDialog open={!profile} />
       </div>
     )
+  const sealedNotificationQuery = await sealNotifications(session.user.id)
   const { data } = await getItemsWithFilters(filters)
   return (
     <FilterPage
@@ -35,7 +35,7 @@ export default async function Home({ searchParams }: { searchParams: SearchParam
       profile={profile}
       city={profile.city}
       reviewInfo={data?.reviewInfo ?? []}
-      notifications={profile.notifications}
+      sealedQuery={sealedNotificationQuery}
       filters={filters}
     />
   )

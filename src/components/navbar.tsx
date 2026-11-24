@@ -9,16 +9,19 @@ import { Input } from './ui/input'
 import { useQueryState } from 'nuqs'
 import Link from 'next/link'
 import { NotificationPopover } from './notification-popover'
-import { Notification } from '@/db/schema/notifications'
+import { SealedLiveQuery } from '@neon/realtime/client'
+import { NotificationsRow } from '@/lib/realtime/notifications'
 
 const Navbar = ({
   profile,
   isHome,
-  notifications,
+  sealedQuery,
+  userId,
 }: {
   profile: Profile
   isHome?: boolean
-  notifications: Notification[]
+  sealedQuery: SealedLiveQuery<NotificationsRow> | null
+  userId: string
 }) => {
   const [searchQ, setSearchQ] = useQueryState('searchQ', {
     shallow: false,
@@ -55,7 +58,7 @@ const Navbar = ({
                 </Button>
               </ButtonGroup>
             )}
-            <NotificationPopover notifications={notifications} />
+            <NotificationPopover sealedQuery={sealedQuery} userId={userId} />
             <UserAvatar profile={profile} />
           </div>
         </nav>

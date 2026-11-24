@@ -1,5 +1,4 @@
 import { ItemCard } from '@/components/item-card'
-import { Navbar } from '@/components/navbar'
 import Pagination from '@/components/pagination'
 import ProfileCard from '@/components/profile-card'
 import { pageSize } from '@/constants'
@@ -35,12 +34,9 @@ export default async function ProfilePage({
       borrowerReviews: true,
     },
   })
-  if (!profile) {
-    return notFound()
-  }
+  if (!profile) return notFound()
   return (
     <div className="mx-auto w-full max-w-7xl p-4 md:p-6">
-      <Navbar profile={profile} notifications={profile.notifications} />
       <div className="flex flex-col gap-8 lg:flex-row">
         {/* Mobile View */}
         <div className="mb-4 lg:hidden">

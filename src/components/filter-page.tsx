@@ -4,20 +4,21 @@ import { ItemCard } from './item-card'
 import { Item } from '@/db/schema/items'
 import { Navbar } from './navbar'
 import { Profile } from '@/db/schema/profiles'
-import { Notification } from '@/db/schema/notifications'
 import { City } from '@/db/schema/cities'
 import Pagination from './pagination'
 import { EmptyState } from './empty-state'
 import { filterSchema } from '@/schema/filter'
 import * as z from 'zod'
+import { NotificationsRow } from '@/lib/realtime/notifications'
+import { SealedLiveQuery } from '@neon/realtime/client'
 
 export default function FilterPage({
   items,
   profile,
   city,
   reviewInfo,
-  notifications,
   filters,
+  sealedQuery,
 }: {
   items: Item[]
   profile: Profile
@@ -27,12 +28,12 @@ export default function FilterPage({
     avgRating: string | null
     totalReviews: number
   }[]
-  notifications: Notification[]
   filters: z.infer<typeof filterSchema>
+  sealedQuery: SealedLiveQuery<NotificationsRow> | null
 }) {
   return (
     <div className="mx-auto w-full max-w-7xl p-4 md:p-6">
-      <Navbar profile={profile} isHome notifications={notifications} />
+      <Navbar profile={profile} isHome sealedQuery={sealedQuery} userId={profile.userId} />
       <div className="flex flex-col gap-8 lg:flex-row">
         {/* Sidebar Filters */}
         <SidebarFilters city={city} />
