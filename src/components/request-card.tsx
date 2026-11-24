@@ -28,28 +28,28 @@ import {
 } from '@/app/actions/requests'
 import { toast } from 'sonner'
 import { Request } from '@/db/schema/requests'
-import { Message } from '@/db/schema/messages'
 import { Conversation } from '@/db/schema/conversations'
 import { DisabledButtonTooltip } from './disabled-button-tooltip'
 import { CreateReviewDialog } from './create-review-dialog'
+import { SealedLiveQuery } from '@neon/realtime/client'
+import { MessagesRow } from '@/lib/realtime/messages'
 
 function RequestCard({
   item,
   request,
-  messages,
   conversation,
   userId,
   isOwner,
 }: {
   item: Item
   request: Request
-  messages: Message[]
   conversation: Conversation
   userId: string
   isOwner?: boolean
 }) {
   const [chatOpen, setChatOpen] = useState(false)
   const [reviewOpen, setReviewOpen] = useState(false)
+  const [sealedQuery, setSealedQuery] = useState<SealedLiveQuery<MessagesRow> | null>(null)
 
   const handleReject = async (requestId: string) => {
     try {
@@ -104,6 +104,30 @@ function RequestCard({
     } catch (error) {
       console.error(error)
       toast.error('Completion failed')
+    }
+  }
+
+  const handleChatOpen = async () => {
+    try {
+      const res = await fetch('/api/messages/live-query', {
+        method: 'POST',
+        cache: 'no-store',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ conversationId: conversation.id }),
+      })
+
+      if (!res.ok) {
+        toast.error('Something went wrong')
+        return
+      }
+
+      const sealedQuery: SealedLiveQuery<MessagesRow> = await res.json()
+
+      setSealedQuery(sealedQuery)
+      setChatOpen(true)
+    } catch (error) {
+      console.error(error)
+      toast.error('Something went wrong')
     }
   }
 
@@ -206,7 +230,7 @@ function RequestCard({
                         </DropdownMenuItem>
                       </DisabledButtonTooltip>
                     ) : (
-                      <DropdownMenuItem onClick={() => setChatOpen(true)}>
+                      <DropdownMenuItem onClick={handleChatOpen}>
                         <PaperPlaneTiltIcon />
                         Message
                       </DropdownMenuItem>
@@ -219,8 +243,8 @@ function RequestCard({
                 setOpen={setChatOpen}
                 conversationId={conversation?.id}
                 item={item}
-                messages={messages}
                 userId={userId}
+                sealedQuery={sealedQuery}
               />
               <CreateReviewDialog open={reviewOpen} setOpen={setReviewOpen} request={request} />
             </ButtonGroup>
@@ -248,7 +272,7 @@ function RequestCard({
                         </DropdownMenuItem>
                       </DisabledButtonTooltip>
                     ) : (
-                      <DropdownMenuItem onClick={() => setChatOpen(true)}>
+                      <DropdownMenuItem onClick={handleChatOpen}>
                         <PaperPlaneTiltIcon />
                         Message
                       </DropdownMenuItem>
@@ -272,8 +296,8 @@ function RequestCard({
                 setOpen={setChatOpen}
                 conversationId={conversation?.id}
                 item={item}
-                messages={messages ?? []}
                 userId={userId}
+                sealedQuery={sealedQuery}
               />
               <CreateReviewDialog open={reviewOpen} setOpen={setReviewOpen} request={request} />
             </ButtonGroup>

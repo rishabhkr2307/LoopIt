@@ -2,7 +2,6 @@
 import { Item } from '@/db/schema/items'
 import { Request } from '@/db/schema/requests'
 import { Conversation } from '@/db/schema/conversations'
-import { Message } from '@/db/schema/messages'
 import RequestCard from './request-card'
 import RequestFilter from './request-filter'
 import Pagination from './pagination'
@@ -14,7 +13,7 @@ function RequestList({
   userId,
 }: {
   requests: (Request & { item: Item | null } & {
-    conversation: (Conversation & { messages: Message[] }) | null
+    conversation: Conversation | null
   })[]
   isOwner?: boolean
   userId: string
@@ -31,7 +30,6 @@ function RequestList({
                 conversation={req.conversation as Conversation}
                 isOwner={isOwner}
                 item={req.item as Item}
-                messages={req.conversation?.messages as Message[]}
                 request={req}
                 userId={userId}
               />

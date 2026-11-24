@@ -18,9 +18,7 @@ export default async function OwnerRequestsPage({ searchParams }: { searchParams
     where: { ownerId: session?.user.id, ...(requestStatus ? { status: requestStatus } : {}) },
     with: {
       item: true,
-      conversation: {
-        with: { messages: true },
-      },
+      conversation: true,
     },
     orderBy: (requests, { desc }) => desc(requests.createdAt),
     limit: pageSize,
