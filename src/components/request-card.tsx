@@ -239,6 +239,7 @@ function RequestCard({
                 </DropdownMenuContent>
               </DropdownMenu>
               <ChatUI
+                isOwner={true}
                 open={chatOpen}
                 setOpen={setChatOpen}
                 conversationId={conversation?.id}
@@ -292,6 +293,7 @@ function RequestCard({
                 </DropdownMenuContent>
               </DropdownMenu>
               <ChatUI
+                isOwner={false}
                 open={chatOpen}
                 setOpen={setChatOpen}
                 conversationId={conversation?.id}

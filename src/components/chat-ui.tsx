@@ -31,6 +31,7 @@ export function ChatUI({
   userId,
   item,
   sealedQuery,
+  isOwner,
 }: {
   open: boolean
   setOpen: Dispatch<SetStateAction<boolean>>
@@ -39,6 +40,7 @@ export function ChatUI({
   item: Item
   disabled?: boolean
   sealedQuery: SealedLiveQuery<MessagesRow> | null
+  isOwner: boolean
 }) {
   const isMobile = useIsMobile()
   const [client] = useState(() =>
@@ -70,7 +72,9 @@ export function ChatUI({
       <DrawerContent>
         <DrawerHeader>
           <DrawerTitle>Message</DrawerTitle>
-          <DrawerDescription>You are messaging owner of {item.name}</DrawerDescription>
+          <DrawerDescription>
+            You are messaging {isOwner ? `borrower` : `owner`} of {item.name}
+          </DrawerDescription>
         </DrawerHeader>
         <RealtimeProvider client={client}>
           {sealedQuery && (
