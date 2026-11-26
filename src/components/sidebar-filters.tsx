@@ -44,7 +44,8 @@ export function SidebarFilters({ city: userCity }: { city: City | null }) {
     setCity(city)
     setLocation(p?.formatted ?? '')
   }
-  const activeFilters = category || orderByPrice || orderByTiming || city || aboveRating ? 1 : 0
+  const activeFilters =
+    category.length > 0 || orderByPrice || orderByTiming || city || aboveRating ? 1 : 0
 
   const toggleCategory = (category: string) => {
     setCategory((prev) =>
