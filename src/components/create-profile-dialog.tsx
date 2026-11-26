@@ -48,13 +48,15 @@ export function CreateProfileDialog({ open }: { open: boolean }) {
           </Button>
         }
       />
-      <DialogContent className="sm:max-w-sm">
+      <DialogContent className="sm:max-w-sm" showCloseButton={false}>
         <form action={formAction}>
           <DialogHeader>
             <DialogTitle>Create Profile</DialogTitle>
-            <DialogDescription>Please create a profile before you continue</DialogDescription>
+            <DialogDescription>
+              Completing your profile is mandatory for all users to access the platform.
+            </DialogDescription>
           </DialogHeader>
-          <FieldGroup>
+          <FieldGroup className="mt-4">
             <Field>
               <Label htmlFor="name">Avatar</Label>
               <Input id="avatar" name="avatar" type="file" accept="image/*" />
@@ -90,7 +92,6 @@ export function CreateProfileDialog({ open }: { open: boolean }) {
             <Input id="pincode" name="pincode" hidden type="text" value={pincode} />
           </FieldGroup>
           <DialogFooter>
-            <DialogClose render={<Button variant="outline">Cancel</Button>} />
             <Button type="submit" disabled={isPending}>
               Create
             </Button>
