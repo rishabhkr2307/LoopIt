@@ -101,6 +101,10 @@ function LiveNotifications({
             </Item>
           ))
         )}
+        <div className="text-xs text-muted-foreground">
+          To view messages, go to the Requests page, open the dropdown menu for the relevant
+          request, and click Messages.
+        </div>
       </PopoverContent>
     </Popover>
   )

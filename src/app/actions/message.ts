@@ -19,7 +19,10 @@ export async function createMessage(
       return { success: false, error: 'You should be logged in' }
     }
 
-    const conversation = await db.query.conversations.findFirst({ where: { id: conversationId } })
+    const conversation = await db.query.conversations.findFirst({
+      where: { id: conversationId },
+      with: { item: true },
+    })
     if (!conversation) {
       return { success: false, error: 'Conversation not found' }
     }
@@ -35,7 +38,7 @@ export async function createMessage(
     await sendNotification(
       conversation.borrowerId == session.user.id ? conversation.ownerId : conversation.borrowerId,
       'New Message',
-      `${session.user.name} sent you a message`,
+      `${session.user.name} sent you a message for ${conversation.item?.name}`,
     )
     return { success: true, data: dbMessage }
   } catch (error) {
