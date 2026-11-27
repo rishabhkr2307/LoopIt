@@ -145,7 +145,9 @@ function RequestCard({
       <div className="p-4">
         <div className="flex justify-between">
           <div>
-            <h3 className="font-medium">{item.name}</h3>
+            <h3 className="font-medium">
+              {item.name.length < 36 ? item.name : item.name.slice(0, 36) + `...`}
+            </h3>
             <p className="text-muted-foreground text-sm">Rental Request</p>
           </div>
         </div>
