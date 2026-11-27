@@ -9,6 +9,7 @@ import { createProfileSchema, editProfileSchema } from '@/schema/profile'
 import { randomUUID } from 'crypto'
 import { files } from '@/lib/storage/upload'
 import { eq } from 'drizzle-orm'
+import { revalidatePath } from 'next/cache'
 
 export async function createProfile(_prevState: { error: string } | null, formData: FormData) {
   const { success, data, error } = createProfileSchema.safeParse({
@@ -131,9 +132,10 @@ export async function editProfile(_prevState: { error: string } | null, formData
         cityId: city.id,
       })
       .where(eq(profiles.id, data.profileId))
+    revalidatePath('/owner/profile')
   } catch (error) {
     console.error('Error at editProfile', error)
     return { error: 'Something went wrong' }
   }
-  redirect('/')
+  redirect('/owner/profile')
 }
