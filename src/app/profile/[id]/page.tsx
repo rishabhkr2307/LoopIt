@@ -55,10 +55,6 @@ export default async function ProfilePage({
           />
         </div>
         <div className="flex-1">
-          <div className="text-muted-foreground mb-4 text-sm">
-            {profile.items.length} items found
-          </div>
-
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {profile.items.map((item) => (
               <ItemCard
