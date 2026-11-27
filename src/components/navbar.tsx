@@ -40,7 +40,7 @@ const Navbar = ({
               <div className="flex size-6 items-center justify-center rounded-md bg-primary text-primary-foreground">
                 <InfinityIcon className="size-4" />
               </div>
-              LoopIt
+              <span className="hidden md:block">LoopIt</span>
             </Link>
           </div>
 

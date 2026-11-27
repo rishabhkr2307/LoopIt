@@ -53,7 +53,7 @@ export function ViewItemDialog({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger hidden />
-      <DialogContent className="sm:max-w-2xl" showCloseButton={false}>
+      <DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-2xl" showCloseButton={false}>
         <form action={formAction}>
           <div className="grid gap-2 grid-cols-1 md:grid-cols-2">
             <div className="col-span-1">

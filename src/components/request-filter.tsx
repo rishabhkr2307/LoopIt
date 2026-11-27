@@ -24,7 +24,7 @@ function RequestFilter() {
           onClick={() => setRequestStatus('pending')}
         >
           <ClockIcon />
-          Pending
+          <span className="hidden md:block">Pending</span>
         </Button>
         <Button
           variant="outline"
@@ -32,7 +32,7 @@ function RequestFilter() {
           onClick={() => setRequestStatus('approved')}
         >
           <CheckCircleIcon />
-          Approved
+          <span className="hidden md:block">Approved</span>
         </Button>
         <Button
           variant="outline"
@@ -40,7 +40,7 @@ function RequestFilter() {
           onClick={() => setRequestStatus('rejected')}
         >
           <XCircleIcon />
-          Rejected
+          <span className="hidden md:block">Rejected</span>
         </Button>
         <Button
           variant="outline"
@@ -48,7 +48,7 @@ function RequestFilter() {
           onClick={() => setRequestStatus('completed')}
         >
           <CheckIcon />
-          Completed
+          <span className="hidden md:block">Completed</span>
         </Button>
         <Button
           variant="outline"
