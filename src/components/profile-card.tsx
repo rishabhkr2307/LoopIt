@@ -57,10 +57,12 @@ function ProfileCard({
             </div>
 
             {isOwner && (
-              <ButtonGroup>
-                <CreateItemDialog />
-                <EditProfileDialog profile={profile} city={city} />
-              </ButtonGroup>
+              <div className="w-full flex justify-center items-center">
+                <ButtonGroup>
+                  <CreateItemDialog />
+                  <EditProfileDialog profile={profile} city={city} />
+                </ButtonGroup>
+              </div>
             )}
           </div>
         </CardContent>
